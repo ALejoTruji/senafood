@@ -1,0 +1,147 @@
+/* Estilos generales */
+body {
+font-family: Arial, sans-serif; /* Fuente general de la página */
+margin: 0; /* Sin márgenes */
+padding: 0; /* Sin rellenos */
+background-color: white; /* Color de fondo */
+height: 100vh; /* Altura de la ventana del navegador */
+}
+
+/* Barra de navegación */
+.navbar {
+background-color: #4caf4f; /* Color de fondo de la barra */
+color: white; /* Color del texto */
+width: 100%; /* Ancho completo */
+display: flex; /* Usar flexbox para alineación */
+justify-content: center; /* Espaciado entre elementos */
+align-items: center; /* Centrar verticalmente los elementos */
+padding: 10px 20px; /* Espaciado vertical y horizontal */
+z-index: 1000; /* Asegurar que esté encima de otros elementos */
+}
+
+.navbar a {
+color: white; /* Color del texto de los enlaces */
+text-decoration: none; /* Sin subrayado */
+padding: 14px 20px; /* Espaciado interno */
+transition: background 0.3s; /* Transición suave para hover */
+}
+
+.navbar a:hover {
+background-color: #FD7B03; /* Color de fondo al pasar el ratón */
+}
+
+/* Ajuste del logo en la barra de navegación */
+.navbar .logo img {
+width: 1cm; /* Establecer el ancho del logo a  cm */
+height: auto; /* Mantener la proporción del logo */
+}
+
+/* Contenedor central */
+.container {
+display: flex; /* Usar flexbox para centrar contenido */
+justify-content: center; /* Centrado horizontal */
+align-items: center; /* Centrado vertical */
+height: calc(100vh - 120px); /* Altura total menos la barra de navegación y descripción */
+margin: 1cm auto; /* Margen superior e inferior de 1 cm */
+}
+
+/* Contenedor del formulario de inicio de sesión */
+.login-form-container {
+background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con opacidad */
+padding: 30px; /* Espaciado interno */
+border-radius: 5px; /* Bordes redondeados */
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+text-align: center; /* Centrar texto */
+width: 100%; /* Ancho relativo */
+max-width: 600px; /* Ancho máximo */
+position: relative; /* Para el pseudo-elemento */
+}
+
+/* Logotipo de Sena Food */
+.logo {
+max-width: 150px; /* Ancho máximo del logotipo */
+margin-bottom: 20px; /* Espacio debajo del logotipo */
+}
+
+/* Estilo para la sección de selección de rol */
+.role-selection button {
+margin: 5px; /* Espacio entre los botones */
+padding: 10px 15px; /* Espaciado interno del botón */
+border: none; /* Sin borde */
+background-color: #4CA105; /* Color de fondo del botón */
+color: white; /* Color del texto del botón */
+cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+border-radius: 5px; /* Bordes redondeados */
+}
+
+/* Estilo para el efecto hover (cuando se pasa el mouse sobre el botón) */
+.role-selection button:hover {
+background-color: #FD7B03; /* Color de fondo al pasar el mouse */
+}
+
+/* Formulario de inicio de sesión */
+.login-form {
+width: 100%; /* Ancho completo */
+display: flex; /* Usar flexbox */
+flex-direction: column; /* Colocar elementos en columna */
+align-items: center; /* Centrar elementos */
+}
+
+/* Campos de entrada */
+.login-form input {
+width: 80%; /* Ancho relativo */
+padding: 10px; /* Espaciado interno */
+margin-bottom: 15px; /* Espacio debajo de cada campo */
+border: 1px solid #ccc; /* Borde gris claro */
+border-radius: 3px; /* Bordes redondeados */
+}
+
+/* Botón de ingreso y registro */
+.login-form button {
+background-color: #4CA105; /* Color de fondo del botón */
+color: #fff; /* Color del texto */
+border: none; /* Sin borde */
+padding: 10px 20px; /* Espaciado interno */
+border-radius: 3px; /* Bordes redondeados */
+cursor: pointer; /* Cambiar cursor al pasar sobre el botón */
+width: 80%; /* Ancho relativo */
+margin-bottom: 10px; /* Espacio debajo del botón */
+}
+
+/* Hover del botón de ingreso y registro */
+.login-form button:hover {
+background-color: #FD7B03; /* Color de fondo al pasar el ratón */
+}
+
+/* Enlace para olvidar la contraseña */
+.login-form a {
+color: #4CAF50; /* Color del enlace */
+text-decoration: none; /* Sin subrayado */
+display: block; /* Mostrar como bloque */
+margin-top: 10px; /* Espacio encima del enlace */
+}
+
+/* Descripción en la parte inferior */
+.description {
+background-color: #4caf4f; /* Color de fondo de la barra */
+text-align: center; /* Centrar el texto de la descripción */
+padding: 10px; /* Espaciado interno de la descripción */
+bottom: 0; /* Posición en la parte inferior */
+width: 100%; /* Ancho completo */
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+.login-form-container {
+padding: 20px; /* Reducir espaciado interno en pantallas pequeñas */
+}
+
+.logo {
+max-width: 120px; /* Reducir tamaño del logotipo en pantallas pequeñas */
+}
+
+.login-form input,
+.login-form button {
+width: 90%; /* Ancho relativo en pantallas pequeñas */
+}
+}
