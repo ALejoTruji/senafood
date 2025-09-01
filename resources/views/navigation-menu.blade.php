@@ -16,7 +16,12 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
-            </div>
+                </div>
+                    <x-nav-link href="{{ route('producto.index') }}" :active="request()->routeIs('producto.*')">
+                        {{ __('Productos') }}
+                    </x-nav-link>
+                </div>
+
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <!-- Teams Dropdown -->
