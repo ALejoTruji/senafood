@@ -17,9 +17,9 @@
                     </x-nav-link>
                 </div>
                 
-                </div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="flex justify-center flex-1">
                     <x-nav-link href="{{ route('producto.index') }}" :active="request()->routeIs('producto.*')">
-                        {{ __('Productos') }}
+                            {{ __('Productos') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -182,7 +182,7 @@
                     @csrf
 
                     <x-responsive-nav-link href="{{ route('logout') }}"
-                                   @click.prevent="$root.submit();">
+                          @click.prevent="$root.submit();">
                         {{ __('Log Out') }}
                     </x-responsive-nav-link>
                 </form>
