@@ -1,24 +1,23 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
+        <h2 class="text-2xl font-bold mb-4 text-green-600 leading-tight text-center">
             {{ __('Gestión de Productos') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12"> 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <h1 class="text-2xl font-bold mb-4">Productos</h1>
+            <h1 class="text-2xl font-bold mb-4 text-green-600">Productos</h1>
 
                 @if($producto->count() > 0)
-                    <table class="table-auto w-full border border-gray-300">
+                    <table id ="producto" class="table-auto w-full border border-green-300">
                         <thead>
-                            <tr class="bg-gray-200">
+                            <tr class="bg-green-600 text-white">
                                 <th class="px-4 py-2 border">Nombre</th>
                                 <th class="px-4 py-2 border">Descripción</th>
                                 <th class="px-4 py-2 border">Costo Unitario</th>
                                 <th class="px-4 py-2 border">Stock</th>
-                                <th class="px-4 py-2 border">Inventario</th>
                                 <th class="px-4 py-2 border">Fecha Vencimiento</th>
                                 <th class="px-4 py-2 border">Categoría</th>
                                 <th class="px-4 py-2 border">Código Barras</th>
@@ -32,7 +31,6 @@
                                     <td class="px-4 py-2 border">{{ $item->descripcion }}</td>
                                     <td class="px-4 py-2 border">{{ $item->costo_unitario }}</td>
                                     <td class="px-4 py-2 border">{{ $item->stock }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->idInventario }}</td>
                                     <td class="px-4 py-2 border">{{ $item->fecha_vencimiento }}</td>
                                     <td class="px-4 py-2 border">{{ $item->categoria }}</td>
                                     <td class="px-4 py-2 border">{{ $item->codigo_barras }}</td>
@@ -48,4 +46,29 @@
             </div>
         </div>
     </div>
+
+    {{-- jQuery + DataTables (CDN) --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+    <link rel="stylesheet"
+    href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script>
+        $(function() {
+            $('#producto').DataTable({
+                pageLength: 20,
+                dom: 'Bfrtip',
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json'
+                },
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+            });
+        });
+    </script>
 </x-app-layout>
