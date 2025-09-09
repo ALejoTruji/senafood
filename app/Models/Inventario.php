@@ -14,8 +14,11 @@ use Illuminate\Database\Eloquent\Model;
  * Class Inventario
  * 
  * @property int $idInventario
+ * @property string|null $nombre
+ * @property int|null $idproducto
  * @property string|null $ubicacion
  * @property int|null $stockTotal
+ * @property float|null $costouni
  * @property float|null $valor_total
  * @property int $capacidad_maxima
  * @property int $alerta_minimos
@@ -39,7 +42,9 @@ class Inventario extends Model
 	public $timestamps = false;
 
 	protected $casts = [
+		'idproducto' => 'int',
 		'stockTotal' => 'int',
+		'costouni' => 'float',
 		'valor_total' => 'float',
 		'capacidad_maxima' => 'int',
 		'alerta_minimos' => 'int',
@@ -50,8 +55,11 @@ class Inventario extends Model
 	];
 
 	protected $fillable = [
+		'nombre',
+		'idproducto',
 		'ubicacion',
 		'stockTotal',
+		'costouni',
 		'valor_total',
 		'capacidad_maxima',
 		'alerta_minimos',
