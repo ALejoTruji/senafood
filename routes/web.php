@@ -5,14 +5,13 @@ use App\Http\Controllers\Producto\ProductoController;
 
 Route::get('/', function () {
     return auth()->check()
-        ? redirect()->route('dashboard') // Si está logueado, ir al dashboard
-        : redirect()->route('login');    // Si no, al login
-});
+        ? redirect()->route('dashboard')
+        : view('welcome'); // Mostrar la vista welcome
+}); 
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
-->resource('producto',ProductoController::class)
-->names('producto');
-
+    ->resource('producto', ProductoController::class)
+    ->names('producto');
 
 Route::middleware([
     'auth:sanctum',
