@@ -37,12 +37,23 @@ class ProductoController extends Controller
      */
     public function store(StoreProductoRequest $request)
     {
-        // Mass assignment con validación
-        Producto::create($request->validated());
+        $data = $request->validated();
+
+        // Asignar automáticamente el inventario (ejemplo: el primero disponible)
+        $inventario = Inventario::first();
+        if (!$inventario) {
+            return redirect()
+                ->route('producto.index')
+                ->withErrors('No hay inventarios disponibles para asignar.');
+        }
+
+        $data['idInventario'] = $inventario->idInventario;
+
+        Producto::create($data);
 
         return redirect()
             ->route('producto.index')
-            ->with('ok', 'Producto creado correctamente');
+            ->with('ok', 'Producto creado correctamente.');
     }
 
     /**
@@ -68,11 +79,16 @@ class ProductoController extends Controller
      */
     public function update(UpdateProductoRequest $request, Producto $producto)
     {
-        $producto->update($request->validated());
+        $data = $request->validated();
+
+        // Mantener el inventario ya asignado
+        $data['idInventario'] = $producto->idInventario;
+
+        $producto->update($data);
 
         return redirect()
             ->route('producto.index')
-            ->with('ok', 'Producto actualizado correctamente');
+            ->with('ok', 'Producto actualizado correctamente.');
     }
 
     /**
