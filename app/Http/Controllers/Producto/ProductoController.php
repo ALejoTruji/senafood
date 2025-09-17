@@ -103,4 +103,13 @@ class ProductoController extends Controller
             return back()->withErrors('No se puede eliminar: tiene registros relacionados.');
         }
     }
+    
+    public function catalogo()
+    {
+        // Obtiene todos los productos con sus datos
+        $productos = \App\Models\Producto::all();
+
+        // Retorna la vista del catálogo con los productos
+        return view('producto.catalogo', compact('productos'));
+    }
 }

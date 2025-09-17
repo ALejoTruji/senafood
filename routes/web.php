@@ -14,6 +14,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     ->resource('producto', ProductoController::class)
     ->names('producto');
 
+// Ruta para el catálogo de clientes
+Route::get('/catalogo', [ProductoController::class, 'catalogo'])->name('catalogo');
+
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     ->resource('inventario', InventarioController::class)
     ->names('inventario');

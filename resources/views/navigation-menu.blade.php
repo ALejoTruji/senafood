@@ -1,12 +1,12 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-20">
+        <div class="flex justify-between h-20 items-center">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                    <img src="{{ asset('images/senafood_logo.jpeg') }}" alt="Senafood Logo" style="height: 70px; width: auto;" />
+                        <img src="{{ asset('images/senafood_logo.jpeg') }}" alt="Senafood Logo" style="height: 70px; width: auto;" />
                     </a>
                 </div>
 
@@ -19,13 +19,19 @@
                 
                 <div class="flex justify-center flex-1">
                     <x-nav-link href="{{ route('producto.index') }}" :active="request()->routeIs('producto.*')">
-                            {{ __('Productos') }}
+                        {{ __('Productos') }}
                     </x-nav-link>
                 </div>
 
                 <div class="flex justify-center flex-1">
                     <x-nav-link href="{{ route('inventario.index') }}" :active="request()->routeIs('inventario.*')">
-                            {{ __('Inventario') }}
+                        {{ __('Inventario') }}
+                    </x-nav-link>
+                </div>
+
+                <!-- Nuevo enlace al Catálogo -->
+                    <x-nav-link href="{{ route('catalogo') }}" :active="request()->routeIs('catalogo')">
+                        {{ __('Catálogo') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -154,8 +160,20 @@
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-        </div>
 
+            <x-responsive-nav-link href="{{ route('producto.index') }}" :active="request()->routeIs('producto.*')">
+                {{ __('Productos') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link href="{{ route('inventario.index') }}" :active="request()->routeIs('inventario.*')">
+                {{ __('Inventario') }}
+            </x-responsive-nav-link>
+
+            <!-- Nuevo enlace al Catálogo en responsive -->
+            <x-responsive-nav-link href="{{ route('catalogo') }}" :active="request()->routeIs('catalogo')">
+                {{ __('Catálogo') }}
+            </x-responsive-nav-link>
+        </div>
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="flex items-center px-4">
