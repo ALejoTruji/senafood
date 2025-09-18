@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Producto\ProductoController;
 use App\Http\Controllers\Inventario\InventarioController;
+use App\Http\Controllers\CarritoController;
 
 Route::get('/', function () {
     return auth()->check()
@@ -30,3 +31,9 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+// 📌 Rutas del carrito
+Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index');
+Route::post('/carrito/add', [CarritoController::class, 'add'])->name('carrito.add');
+Route::post('/carrito/remove', [CarritoController::class, 'remove'])->name('carrito.remove');
+Route::post('/carrito/clear', [CarritoController::class, 'clear'])->name('carrito.clear');
