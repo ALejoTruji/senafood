@@ -1,8 +1,9 @@
 <?php
 
 // Declara el espacio de nombres del controlador
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Carrito;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Producto;
 

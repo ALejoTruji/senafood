@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Producto\ProductoController;
 use App\Http\Controllers\Inventario\InventarioController;
-use App\Http\Controllers\CarritoController;
+use App\Http\Controllers\Carrito\CarritoController;
 
 Route::get('/', function () {
     return auth()->check()
