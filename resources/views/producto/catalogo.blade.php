@@ -6,13 +6,12 @@
     </x-slot>
 
     <!-- Botón para abrir carrito -->
-    <div class="text-center mb-6">
-        <button onclick="toggleCarrito()" 
-            class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded shadow">
-            🛒 Ver carrito
+    <div class="flex justify-end mb-6">
+    <button onclick="toggleCarrito()" 
+        class="bg-orange-600 hover:bg-green-700 text-white w-20 h-12 flex items-center justify-center rounded-full shadow">
+        🛒Carrito
     </button>
-    </div>
-
+</div>
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
         @foreach ($productos as $producto)
             <div class="bg-white rounded-lg shadow p-4">
