@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Producto\ProductoController;
 use App\Http\Controllers\Inventario\InventarioController;
 use App\Http\Controllers\Carrito\CarritoController;
+use App\Http\Controllers\Proveedor\ProveedorController;
 
 Route::get('/', function () {
     return auth()->check()
@@ -14,6 +15,10 @@ Route::get('/', function () {
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     ->resource('producto', ProductoController::class)
     ->names('producto');
+
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
+    ->resource('proveedor', ProveedorController::class)
+    ->names('proveedor');
 
 // Ruta para el catálogo de clientes
 Route::get('/catalogo', [ProductoController::class, 'catalogo'])->name('catalogo');

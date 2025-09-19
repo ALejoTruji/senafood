@@ -1,3 +1,4 @@
+<!-- Campo Nombre -->
 <div class="mb-4">
     <label for="nombre" class="block font-semibold">Nombre</label>
     <input type="text" name="nombre" id="nombre"
@@ -6,6 +7,7 @@
     @error('nombre') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
 </div>
 
+<!-- Campo Descripción -->
 <div class="mb-4">
     <label for="descripcion" class="block font-semibold">Descripción</label>
     <textarea name="descripcion" id="descripcion" rows="3"
@@ -13,6 +15,7 @@
     @error('descripcion') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
 </div>
 
+<!-- Campo Costo Unitario -->
 <div class="mb-4">
     <label for="costo_unitario" class="block font-semibold">Costo Unitario</label>
     <input type="number" step="0.01" name="costo_unitario" id="costo_unitario"
@@ -21,6 +24,7 @@
     @error('costo_unitario') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
 </div>
 
+<!-- Campo Stock -->
 <div class="mb-4">
     <label for="stock" class="block font-semibold">Stock</label>
     <input type="number" name="stock" id="stock"
@@ -29,6 +33,7 @@
     @error('stock') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
 </div>
 
+<!-- Campo Fecha de Vencimiento -->
 <div class="mb-4">
     <label for="fecha_vencimiento" class="block font-semibold">Fecha de Vencimiento</label>
     <input type="date" name="fecha_vencimiento" id="fecha_vencimiento"
@@ -37,6 +42,7 @@
     @error('fecha_vencimiento') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
 </div>
 
+<!-- Campo Categoría -->
 <div class="mb-4">
     <label for="categoria" class="block font-semibold">Categoría</label>
     <input type="text" name="categoria" id="categoria"
@@ -45,6 +51,7 @@
     @error('categoria') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
 </div>
 
+<!-- Campo Código de Barras -->
 <div class="mb-4">
     <label for="codigo_barras" class="block font-semibold">Código de Barras</label>
     <input type="text" name="codigo_barras" id="codigo_barras"
@@ -53,6 +60,7 @@
     @error('codigo_barras') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
 </div>
 
+<!-- Campo Estado -->
 <div class="mb-4">
     <label for="estado" class="block font-semibold">Estado</label>
     <select name="estado" id="estado" class="w-full border rounded px-3 py-2">
@@ -62,6 +70,24 @@
     @error('estado') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
 </div>
 
+<!-- Campo Imagen -->
+<div class="mb-4">
+    <label for="imagen" class="block font-semibold">Imagen del Producto</label>
+    <input type="file" name="imagen" id="imagen" accept="image/*"
+           class="w-full border rounded px-3 py-2">
+    @error('imagen') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+
+    <!-- Si ya existe una imagen, se muestra vista previa -->
+    @if(isset($producto) && $producto->imagen)
+        <div class="mt-2">
+            <p class="text-sm text-gray-600">Imagen actual:</p>
+            <img src="{{ asset('storage/' . $producto->imagen) }}" alt="Imagen de {{ $producto->nombre }}"
+                 class="h-24 rounded border">
+        </div>
+    @endif
+</div>
+
+<!-- Botones -->
 <div class="flex justify-between">
     <a href="{{ route('producto.index') }}"
        class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
