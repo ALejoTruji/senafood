@@ -30,8 +30,16 @@
                 </div>
 
                 <!-- Nuevo enlace al Catálogo -->
+                <div class="flex justify-center flex-1">
                     <x-nav-link href="{{ route('catalogo') }}" :active="request()->routeIs('catalogo')">
                         {{ __('Catálogo') }}
+                    </x-nav-link>
+                </div>
+
+                <!-- Nuevo enlace al Proveedor -->
+                <div class="flex justify-center flex-1">
+                    <x-nav-link href="{{ route('proveedor.index') }}" :active="request()->routeIs('proveedor.*')">
+                        {{ __('Proveedor') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -172,6 +180,11 @@
             <!-- Nuevo enlace al Catálogo en responsive -->
             <x-responsive-nav-link href="{{ route('catalogo') }}" :active="request()->routeIs('catalogo')">
                 {{ __('Catálogo') }}
+            </x-responsive-nav-link>
+
+            <!-- Nuevo enlace al Proveedor en responsive -->
+            <x-responsive-nav-link href="{{ route('proveedor.index') }}" :active="request()->routeIs('proveedor.*')">
+                {{ __('Proveedor') }}
             </x-responsive-nav-link>
         </div>
         <!-- Responsive Settings Options -->

@@ -10,18 +10,20 @@ class StoreProductoRequest extends FormRequest
     {
         return true;
     }
-
+    // app/Http/Requests/StoreProductoRequest.php (solo rules() mostrado)
     public function rules(): array
     {
         return [
-            'nombre'           => 'required|string|max:255',
-            'descripcion'      => 'nullable|string',
-            'costo_unitario'   => 'required|numeric|min:0',
-            'stock'            => 'required|integer|min:0',
-            'fecha_vencimiento'=> 'required|date|after:today',
-            'categoria'        => 'required|string|max:100',
-            'codigo_barras'    => 'nullable|string|max:50',
-            'estado'           => 'required|in:activo,inactivo',
+            'nombre'            => 'required|string|max:255',
+            'descripcion'       => 'nullable|string',
+            'costo_unitario'    => 'required|numeric|min:0',
+            'stock'             => 'required|integer|min:0',
+            'fecha_vencimiento' => 'nullable|date',
+            'categoria'         => 'required|string|max:100',
+            'codigo_barras'     => 'nullable|string|max:50',
+            'estado'            => 'required|in:activo,inactivo',
+            // imagen: opcional, tipo imagen, tipos soportados, max 2MB
+            'imagen'            => 'nullable|image|mimes:jpeg,jpg,png,webp,gif|max:2048',
         ];
     }
 
