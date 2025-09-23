@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use App\Models\Inventario;
 use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\UpdateProductoRequest;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class ProductoController extends Controller
 {
@@ -16,14 +19,7 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        /** 
-        * <!-- Obtiene todos los productos -->
-        */
         $producto = Producto::all();
-
-        /** 
-          * <!-- Retorna la vista con la lista de productos -->
-         */
         return view('producto.index', compact('producto'));
     }
 
@@ -32,9 +28,6 @@ class ProductoController extends Controller
      */
     public function create()
     {
-        /*
-        *<!-- Se traen los inventarios ordenados por nombre para asociarlos al producto -->
-        */
         return view('producto.create', [
             'inventarios' => Inventario::orderBy('nombre')->get(['idInventario', 'nombre']),
         ]);
@@ -43,34 +36,80 @@ class ProductoController extends Controller
     /**
      * <!-- Guarda un nuevo producto en la base de datos -->
      */
-    public function store(StoreProductoRequest $request)
+    public function store(Request $request)
     {
-        /**
-         * <!-- Valida los datos enviados en el formulario -->
-         */
-        $data = $request->validated();
+        // ✅ Validación de datos
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'costo_unitario' => 'required|numeric',
+            'stock' => 'required|integer',
+            'fecha_vencimiento' => 'nullable|date',
+            'categoria' => 'nullable|string|max:255',
+            'codigo_barras' => 'nullable|string|max:255',
+            'estado' => 'required|string',
+            'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
+        ]);
 
-        /**
-         * <!-- Asigna automáticamente un inventario (ejemplo: el primero disponible) -->
-        */
-        $inventario = Inventario::first();
-        if (!$inventario) {
-            /**<!-- Si no hay inventarios, se devuelve con error -->*/
-            return redirect()
-                ->route('producto.index')
-                ->withErrors('No hay inventarios disponibles para asignar.');
+        DB::beginTransaction();
+
+        try {
+            // 1️⃣ Crear inventario asociado
+            $inventario = new Inventario();
+            $inventario->nombre = $validated['nombre'] ?? 'Inventario de producto';
+            $inventario->ubicacion = 'Bodega Principal';
+            $inventario->stockTotal = $validated['stock'] ?? 0;
+            $inventario->costouni = $validated['costo_unitario'] ?? 0;
+            $inventario->valor_total = ($validated['stock'] ?? 0) * ($validated['costo_unitario'] ?? 0);
+            $inventario->capacidad_maxima = 100;
+            $inventario->alerta_minimos = 5;
+            $inventario->responsable = auth()->user()->name ?? 'system';
+            $inventario->ultima_revision = Carbon::now();
+            $inventario->observaciones = 'Inventario creado automáticamente al crear producto';
+            $inventario->usuario_ultima_actualizacion = auth()->id() ?? 1;
+            $inventario->save();
+
+            // 2️⃣ Crear producto
+            $producto = new Producto();
+            $producto->nombre = $validated['nombre'];
+            $producto->descripcion = $validated['descripcion'] ?? null;
+            $producto->costo_unitario = $validated['costo_unitario'];
+            $producto->stock = $validated['stock'];
+            $producto->fecha_vencimiento = $validated['fecha_vencimiento'] ?? null;
+            $producto->categoria = $validated['categoria'] ?? null;
+            $producto->codigo_barras = $validated['codigo_barras'] ?? null;
+            $producto->estado = $validated['estado'];
+
+            // ✅ Manejo de imagen
+            if ($request->hasFile('imagen')) {
+                $file = $request->file('imagen');
+
+                // Nombre único pero legible (sin caracteres raros)
+                $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) 
+                    . '.' . $file->getClientOriginalExtension();
+
+                // Se guarda en storage/app/public/productos
+                $file->storeAs('productos', $filename, 'public');
+
+                // Guardamos SOLO el nombre del archivo en DB
+                $producto->imagen = $filename;
+            }
+
+            // Asociar inventario
+            $producto->idInventario = $inventario->idInventario;
+            $producto->save();
+
+            DB::commit();
+
+            return redirect()->route('producto.index')->with('success', 'Producto creado con éxito y asociado a inventario.');
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::error('Error creando producto con inventario: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Ocurrió un error al crear el producto: ' . $e->getMessage()]);
         }
-
-        /**<!-- Se asigna el inventario al producto -->*/
-        $data['idInventario'] = $inventario->idInventario;
-
-        /**<!-- Crea el producto en la base de datos -->*/
-        Producto::create($data);
-
-        /**<!-- Redirige con mensaje de éxito -->*/
-        return redirect()
-            ->route('producto.index')
-            ->with('ok', 'Producto creado correctamente.');
     }
 
     /**
@@ -78,7 +117,7 @@ class ProductoController extends Controller
      */
     public function show(Producto $producto)
     {
-        /**<!-- Por ahora vacío, pero se puede usar para mostrar detalle del producto -->*/
+        // Aquí puedes mostrar el detalle de un producto si quieres
     }
 
     /**
@@ -86,7 +125,6 @@ class ProductoController extends Controller
      */
     public function edit(Producto $producto)
     {
-        /**<!-- Retorna la vista de edición con el producto actual e inventarios -->*/
         return view('producto.edit', [
             'producto'    => $producto,
             'inventarios' => Inventario::orderBy('nombre')->get(['idInventario','nombre']),
@@ -96,49 +134,60 @@ class ProductoController extends Controller
     /**
      * <!-- Actualiza un producto existente -->
      */
-    public function update(UpdateProductoRequest $request, Producto $producto)
+    public function update(Request $request, $id)
     {
-        /**<!-- Valida los datos del formulario -->*/
-        $data = $request->validated();
+        $producto = Producto::findOrFail($id);
 
-        /**<!-- Mantiene el inventario previamente asignado -->*/
-        $data['idInventario'] = $producto->idInventario;
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'costo_unitario' => 'required|numeric',
+            'stock' => 'required|integer',
+            'fecha_vencimiento' => 'nullable|date',
+            'categoria' => 'nullable|string|max:255',
+            'codigo_barras' => 'nullable|string|max:255',
+            'estado' => 'required|string',
+            'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
+        ]);
 
-        /**<!-- Actualiza el producto en la base de datos -->*/
-        $producto->update($data);
+        $producto->fill($validated);
 
-        /**<!-- Redirige con mensaje de éxito -->*/
-        return redirect()
-            ->route('producto.index')
-            ->with('ok', 'Producto actualizado correctamente.');
+        // ✅ Si hay nueva imagen, reemplazar la anterior
+        if ($request->hasFile('imagen')) {
+            $file = $request->file('imagen');
+            $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) 
+                . '.' . $file->getClientOriginalExtension();
+            // Se guarda en storage/app/public/productos
+            $file->storeAs('productos', $filename, 'public');
+
+            // Guardamos SOLO el nombre del archivo en DB
+            $producto->imagen = $filename;
+        }
+
+        $producto->save();
+
+        return redirect()->route('producto.index')->with('success', 'Producto actualizado con éxito');
     }
 
     /**
      * <!-- Elimina un producto de la base de datos -->
      */
     public function destroy(Producto $producto)
-    {  
+    {
         try {
-            /**<!-- Intenta eliminar el producto -->*/
-            $producto->delete(); 
-
-            /**<!-- Mensaje de éxito si se eliminó -->*/
+            $producto->delete();
             return back()->with('ok', 'Producto eliminado');
         } catch (\Throwable $e) {
-            /**<!-- Si falla (por relaciones), muestra error -->*/
             return back()->withErrors('No se puede eliminar: tiene registros relacionados.');
         }
     }
-    
+
     /**
      * <!-- Muestra el catálogo de productos -->
      */
     public function catalogo()
     {
-        /**<!-- Obtiene todos los productos -->*/
-        $productos = \App\Models\Producto::all();
-
-        /**<!-- Retorna la vista del catálogo con los productos -->*/
+        $productos = Producto::all();
         return view('producto.catalogo', compact('productos'));
     }
 }
