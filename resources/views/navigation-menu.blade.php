@@ -47,6 +47,13 @@
                     </x-nav-link>
                 </div>
             </div>
+                <!--Enlase Notificacion-->
+            <div class="flex justify-center flex-1">
+                    <x-nav-link href="{{ route('notificacion.index') }}" :active="request()->routeIs('notificacion.*')">
+                        {{ __('Notificacion') }}
+                    </x-nav-link>
+                </div>
+            </div>
             
             <!-- 🔹 SECCIÓN DERECHA DE LA NAVBAR (equipos, usuario, etc.) -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
