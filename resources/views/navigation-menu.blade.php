@@ -34,8 +34,16 @@
                 </div>
 
                 <!-- Nuevo enlace al Catálogo -->
+                <div class="flex justify-center flex-1">
                     <x-nav-link href="{{ route('catalogo') }}" :active="request()->routeIs('catalogo')">
                         {{ __('Catálogo') }}
+                    </x-nav-link>
+                </div>
+
+                <!-- Enlace al Proveedor -->
+                <div class="flex justify-center flex-1">
+                    <x-nav-link href="{{ route('proveedor.index') }}" :active="request()->routeIs('proveedor.*')">
+                        {{ __('Proveedor') }}
                     </x-nav-link>
                 </div>
             </div>
