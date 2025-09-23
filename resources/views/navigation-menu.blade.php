@@ -46,9 +46,9 @@
                         {{ __('Proveedor') }}
                     </x-nav-link>
                 </div>
-            </div>
+
                 <!--Enlase Notificacion-->
-            <div class="flex justify-center flex-1">
+                <div class="flex justify-center flex-1">
                     <x-nav-link href="{{ route('notificacion.index') }}" :active="request()->routeIs('notificacion.*')">
                         {{ __('Notificacion') }}
                     </x-nav-link>
