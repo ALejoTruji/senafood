@@ -15,7 +15,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="font-sans antialiased min-h-screen bg-gradient-to-br from-white via-orange-50 to-orange-500">
+<body class="font-sans antialiased bg-gray-100 min-h-screen">
     
     <!-- Banner -->
     <x-banner />
@@ -25,8 +25,8 @@
 
     <!-- Encabezado dinámico -->
     @if (isset($header))
-        <header class="bg-white/70 backdrop-blur-md shadow-md border-b border-orange-500">
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-gray-800">
+        <header class="bg-white shadow">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                 {{ $header }}
             </div>
         </header>
