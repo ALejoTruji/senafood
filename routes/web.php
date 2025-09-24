@@ -5,7 +5,8 @@ use App\Http\Controllers\Producto\ProductoController;
 use App\Http\Controllers\Inventario\InventarioController;
 use App\Http\Controllers\Carrito\CarritoController;
 use App\Http\Controllers\Proveedor\ProveedorController;
-use App\Http\Controllers\Notificacion\NotificacionController;
+use App\Http\Controllers\Promocion\PromocionController;
+
 
 Route::get('/', function () {
     return auth()->check()
@@ -28,11 +29,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     ->resource('inventario', InventarioController::class)
     ->names('inventario');
 
-//Ruta Notificacion
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
-    ->resource('notificacion', NotificacionController::class)
-    ->names('notificacion');
-
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -42,11 +38,15 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+//ruta para promocion
+Route::get('/promocion', [PromocionController::class, 'Promocion'])->name('Promocion');
+
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
+    ->resource('promocion', PromocionController::class)
+    ->names('promoción');
 
 // 📌 Rutas del carrito
 Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index');
 Route::post('/carrito/add', [CarritoController::class, 'add'])->name('carrito.add');
 Route::post('/carrito/remove', [CarritoController::class, 'remove'])->name('carrito.remove');
 Route::post('/carrito/clear', [CarritoController::class, 'clear'])->name('carrito.clear');
-
-
