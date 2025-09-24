@@ -33,10 +33,26 @@
                     </x-nav-link>
                 </div>
 
-                <!-- Enlace al Catálogo -->
-                <x-nav-link href="{{ route('catalogo') }}" :active="request()->routeIs('catalogo')">
-                    {{ __('Catálogo') }}
-                </x-nav-link>
+                <!-- Nuevo enlace al Catálogo -->
+                <div class="flex justify-center flex-1">
+                    <x-nav-link href="{{ route('catalogo') }}" :active="request()->routeIs('catalogo')">
+                        {{ __('Catálogo') }}
+                    </x-nav-link>
+                </div>
+
+                <!-- Enlace al Proveedor -->
+                <div class="flex justify-center flex-1">
+                    <x-nav-link href="{{ route('proveedor.index') }}" :active="request()->routeIs('proveedor.*')">
+                        {{ __('Proveedor') }}
+                    </x-nav-link>
+                </div>
+
+                <!--Enlase Notificacion-->
+                <div class="flex justify-center flex-1">
+                    <x-nav-link href="{{ route('notificacion.index') }}" :active="request()->routeIs('notificacion.*')">
+                        {{ __('Notificacion') }}
+                    </x-nav-link>
+                </div>
             </div>
             
             <!-- 🔹 SECCIÓN DERECHA DE LA NAVBAR (equipos, usuario, etc.) -->
@@ -191,6 +207,11 @@
             <!-- Enlace al catálogo -->
             <x-responsive-nav-link href="{{ route('catalogo') }}" :active="request()->routeIs('catalogo')">
                 {{ __('Catálogo') }}
+            </x-responsive-nav-link>
+
+            <!-- Nuevo enlace al Proveedor en responsive -->
+            <x-responsive-nav-link href="{{ route('proveedor.index') }}" :active="request()->routeIs('proveedor.*')">
+                {{ __('Proveedor') }}
             </x-responsive-nav-link>
         </div>
 

@@ -6,10 +6,10 @@
     </x-slot>
 
     <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-        <form action="{{ route('producto.store') }}" method="POST">
+        <!-- Formulario para crear producto -->
+        <form action="{{ route('producto.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-
-            {{-- Formulario reutilizable --}}
+            <!-- Incluimos todos los campos desde form.blade.php -->
             @include('producto.partials.form')
         </form>
     </div>

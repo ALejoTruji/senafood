@@ -6,11 +6,11 @@
     </x-slot>
 
     <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-        <form action="{{ route('producto.update', $producto->idProducto) }}" method="POST">
+        <!-- Formulario para editar producto -->
+        <form action="{{ route('producto.update', $producto->idProducto) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-
-            {{-- Formulario reutilizable --}}
+            <!-- Incluimos todos los campos desde form.blade.php -->
             @include('producto.partials.form', ['producto' => $producto])
         </form>
     </div>
