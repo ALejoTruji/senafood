@@ -1,41 +1,45 @@
 <?php
 
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class Notificacion
- * 
- * @property int $idNotificacion
- * @property string|null $mensaje
- * @property Carbon|null $fechaEnvio
- * @property int $idUsuario
- * @property int $idCarrito
- *
- * @package App\Models
- */
 class Notificacion extends Model
 {
-	protected $table = 'notificacion';
-	protected $primaryKey = 'idNotificacion';
-	public $timestamps = false;
+    protected $table = 'notificacion'; // 👈 nombre real de la tabla
+    protected $primaryKey = 'idNotificacion';
+    public $timestamps = false;
 
-	protected $casts = [
-		'fechaEnvio' => 'datetime',
-		'idUsuario' => 'int',
-		'idCarrito' => 'int'
-	];
+    protected $casts = [
+        'fecha_envio' => 'datetime',
+        'fechaLeida' => 'datetime',
+        'idUsuario' => 'int',
+        'idCarrito' => 'int',
+        'leida' => 'boolean',
+    ];
 
-	protected $fillable = [
-		'mensaje',
-		'fechaEnvio',
-		'idUsuario',
-		'idCarrito'
-	];
+    protected $fillable = [
+        'mensaje',
+        'fecha_envio',
+        'idUsuario',
+        'idCarrito',
+        'leida',
+        'fechaLeida',
+    ];
+
+    protected static function booted()
+    {
+    static::creating(function ($notificacion) {
+        if (empty($notificacion->fecha_envio)) {
+            $notificacion->fecha_envio = now();
+        }
+        });
+    }
+
+    // 🔹 Relación con Carrito
+    public function carrito()
+    {
+        return $this->belongsTo(Carrito::class, 'idCarrito', 'idCarrito');
+    }
 }
