@@ -51,6 +51,13 @@
                 </div>
 <<<<<<< HEAD
 
+                <!--Enlase Orden de compra-->
+                <div class="flex justify-center flex-1">
+                    <x-nav-link href="{{ route('ordencompra.index') }}" :active="request()->routeIs('ordencompra.*')">
+                        {{ __('O C') }}
+                    </x-nav-link>
+                </div>
+
                 <!--Enlase Notificacion-->
                 <div class="flex justify-center flex-1">
                     <x-nav-link href="{{ route('notificacion.index') }}" :active="request()->routeIs('notificacion.*')">
@@ -202,6 +209,16 @@
             <!-- Nuevo enlace al Proveedor en responsive -->
             <x-responsive-nav-link href="{{ route('proveedor.index') }}" :active="request()->routeIs('proveedor.*')">
                 {{ __('Proveedor') }}
+            </x-responsive-nav-link>
+
+            <!-- Nuevo enlace al Proveedor en responsive -->
+            <x-responsive-nav-link href="{{ route('notificacion.index') }}" :active="request()->routeIs('notificacion.*')">
+                {{ __('Notificacion') }}
+            </x-responsive-nav-link>
+
+            <!-- Nuevo enlace al Proveedor en responsive -->
+            <x-responsive-nav-link href="{{ route('ordencompra.index') }}" :active="request()->routeIs('ordencompra.*')">
+                {{ __('O C') }}
             </x-responsive-nav-link>
         </div>
         <!-- Responsive Settings Options -->

@@ -8,6 +8,8 @@ use App\Http\Controllers\Proveedor\ProveedorController;
 use App\Http\Controllers\Promocion\PromocionController;
 
 
+
+
 Route::get('/', function () {
     return auth()->check()
         ? redirect()->route('dashboard')
@@ -38,6 +40,12 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+//ruta para promocion
+Route::get('/promocion', [PromocionController::class, 'Promocion'])->name('Promocion');
+
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
+    ->resource('promocion', PromocionController::class)
+    ->names('promoción');
 //ruta para promocion
 Route::get('/promocion', [PromocionController::class, 'Promocion'])->name('Promocion');
 
