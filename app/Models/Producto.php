@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $estado
  * @property Carbon|null $create_at
  * @property Carbon|null $update_at
+ * @property string|null $imagen
  *
  * @property Inventario $inventario
  * @property Collection|Calificacion[] $calificacions
@@ -58,6 +59,7 @@ class Producto extends Model
         'estado',
         'create_at',
         'update_at',
+        'imagen' // campo de imagen
     ];
 
     // 🔗 Relación: un producto pertenece a un inventario
@@ -89,5 +91,13 @@ class Producto extends Model
     public function promocions()
     {
         return $this->hasMany(Promocion::class, 'idProducto');
+    }
+
+    // ✅ Accesor para devolver la URL completa de la imagen
+    public function getImagenUrlAttribute()
+    {
+        return $this->imagen
+            ? asset('storage/productos/' . $this->imagen)
+            : null;
     }
 }
