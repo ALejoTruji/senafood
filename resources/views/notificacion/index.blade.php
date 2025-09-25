@@ -8,10 +8,25 @@
     <div class="py-12"> 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-            <h1 class="text-2xl font-bold mb-4 text-green-600">Notificacion</h1>
 
-                @if($notificacion->count() > 0)
-                    <table id ="notificacion" class="table-auto w-full border border-green-300">
+                <!-- Título -->
+                <h1 class="text-2xl font-bold mb-4 text-green-600">Listado de Notificaciones</h1>
+                
+                <!-- Botón crear -->
+                <p>
+                    <a href="{{ route('notificacion.create') }}" class="bg-green-600 text-white px-2 py-2 rounded">
+                        Crear PQRS
+                    </a>
+                </p>
+
+                <!-- Mensaje flash -->
+                @if (session('ok'))
+                    <p class="text-green-600 font-bold mt-2">{{ session('ok') }}</p>
+                @endif
+
+                <!-- Tabla de notificaciones -->
+                @if($notificaciones->count() > 0)
+                    <table id="notificacion" class="table-auto w-full border border-green-300 mt-4">
                         <thead>
                             <tr class="bg-green-600 text-white">
                                 <th class="px-4 py-2 border">Mensage</th>
@@ -23,10 +38,26 @@
                         <tbody>
                             @foreach ($notificacion as $item)
                                 <tr>
-                                    <td class="px-4 py-2 border">{{ $item->mesage }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->fechaEnvio }}</td>
+                                    <td class="px-4 py-2 border">{{ $item->mensaje }}</td>
+                                    <td class="px-4 py-2 border">{{ $item->fecha_envio }}</td>
                                     <td class="px-4 py-2 border">{{ $item->idUsuario }}</td>
                                     <td class="px-4 py-2 border">{{ $item->idCarrito }}</td>
+                                    <td class="px-4 py-2 border">
+                                        <!-- Botón Editar -->
+                                        <a href="{{ route('notificacion.edit', $item->idNotificacion) }}" 
+                                        class="bg-yellow-500 text-white px-2 py-1 rounded">Editar</a>
+
+                                        <!-- Botón Eliminar -->
+                                        <form action="{{ route('notificacion.destroy', $item->idNotificacion) }}" 
+                                            method="POST" 
+                                            style="display:inline" 
+                                            onsubmit="return confirm('¿Eliminar esta notificación?')">
+                                            @csrf 
+                                            @method('DELETE')
+                                            <button type="submit" 
+                                                    class="bg-red-600 text-white px-2 py-1 rounded">Eliminar</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

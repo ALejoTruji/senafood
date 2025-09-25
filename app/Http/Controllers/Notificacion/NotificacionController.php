@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Notificacion;
 
 use App\Http\Controllers\Controller;
 use App\Models\Notificacion;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreNotificacionRequest;
+use App\Http\Requests\UpdateNotificacionRequest;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class NotificacionController extends Controller
 {
@@ -13,8 +16,12 @@ class NotificacionController extends Controller
      */
     public function index()
     {
-        $notificacion = Notificacion::all();
-        return view('notificacion.index', compact('notificacion'));
+        // Trae las notificaciones con la relación usuario, ordenadas por fecha de envío
+        $notificaciones = Notificacion::with('usuario')
+            ->orderBy('fecha_envio', 'desc')
+            ->get();
+
+        return view('notificacion.index', compact('notificaciones'));
     }
 
     /**
@@ -30,11 +37,23 @@ class NotificacionController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        // Validar los datos que sí vienen del formulario
+        $data = $request->validated();
 
+        // Forzar el usuario autenticado y la fecha
+        $data['idUsuario'] = Auth::id();
+        $data['fecha_envio'] = now();
+
+        // Crear la notificación
+        Notificacion::create($data);
+
+        // Redirigir con mensaje de éxito
+        return redirect()
+            ->route('notificacion.index')
+            ->with('success', 'Notificación creada correctamente.');
+    }
     /**
-     * Display the specified resource.
+     * Mostra una notificación específica.
      */
     public function show(Notificacion $notificacion)
     {
@@ -54,11 +73,20 @@ class NotificacionController extends Controller
      */
     public function update(Request $request, Notificacion $notificacion)
     {
-        //
+        $data = $request->validated();
+
+        // Si quieres evitar que un update cambie de usuario:
+        unset($data['idUsuario']);
+
+        $notificacion->update($data);
+
+        return redirect()
+            ->route('notificacion.index')
+            ->with('success', 'Notificación actualizada correctamente.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Elimina una notificación de la base de datos.
      */
     public function destroy(Notificacion $notificacion)
     {
