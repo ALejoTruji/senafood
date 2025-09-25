@@ -28,19 +28,11 @@ class Notificacion extends Model
 	public $timestamps = false;
 
 	protected $casts = [
-		'fechaEnvio' => 'datetime',
+		'fecha_envio' => 'datetime',
 		'idUsuario' => 'int',
 		'idCarrito' => 'int'
 	];
 
-<<<<<<< juanse
-	protected $fillable = [
-		'mensaje',
-		'fechaEnvio',
-		'idUsuario',
-		'idCarrito'
-	];
-=======
     protected $fillable = [
         'mensaje',
         'fecha_envio',
@@ -70,5 +62,4 @@ class Notificacion extends Model
     {
         return $this->belongsTo(User::class, 'idUsuario', 'id');
     }
->>>>>>> local
 }
