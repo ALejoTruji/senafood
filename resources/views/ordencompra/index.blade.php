@@ -70,7 +70,7 @@
                                         <!-- Botón Editar -->
                                         <a href="{{ url('ordencompra/'.$item->id.'/edit') }}"
                                         class="bg-green-400 hover:bg-green-500 text-white font-semibold px-3 py-1 rounded-lg shadow">
-                                        Modificar
+                                        Editar
                                         </a>
                                         <!-- Botón Eliminar -->
                                         <form action="{{ url('ordencompra/'.$item->id) }}" method="POST" style="display:inline;">
