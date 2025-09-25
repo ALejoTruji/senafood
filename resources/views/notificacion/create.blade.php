@@ -1,14 +1,15 @@
-<!-- Usamos el layout principal -->
+<!-- layout principal -->
 <x-app-layout>
     <x-slot name="header">
-        <h1 class="text-xl font-bold mb-4">Crear Notificación</h1>
+        <h1 class="text-2xl font-bold mb-4 text-green-600 text-center">
+        Crear Notificación
+        </h1>
     </x-slot>
-
     <!-- Formulario de creación -->
     <form action="{{ route('notificacion.store') }}" method="POST" class="space-y-6">
         @csrf
 
-        <!-- Incluimos el formulario parcial con los campos -->
+        <!-- formulario parcial con los campos -->
         @include('notificacion._form', ['notificacion' => null])
 
         <!-- Botones -->

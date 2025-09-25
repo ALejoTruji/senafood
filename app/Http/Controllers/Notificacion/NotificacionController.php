@@ -36,17 +36,18 @@ class NotificacionController extends Controller
      */
     public function store(StoreNotificacionRequest $request)
     {
-        // Validar datos
         $data = $request->validated();
 
-        // Crear la notificación
+        // Forzar siempre el usuario autenticado y la fecha
+        $data['idUsuario'] = auth()->id();
+        $data['fecha_envio'] = now();
+
         Notificacion::create($data);
 
-        // Redirigir con mensaje de éxito
         return redirect()
             ->route('notificacion.index')
-            ->with('ok', 'Notificación creada correctamente.');
-    }
+            ->with('success', 'Notificación creada correctamente.');
+}
 
     /**
      * Mostra una notificación específica.

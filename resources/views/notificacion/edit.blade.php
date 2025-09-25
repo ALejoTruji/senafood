@@ -1,4 +1,4 @@
-<!-- Usamos el layout principal -->
+<!-- layout principal -->
 <x-app-layout>
     <x-slot name="header">
         <h1 class="text-xl font-bold mb-4">Editar Notificación</h1>
@@ -9,7 +9,7 @@
         @csrf
         @method('PUT')
 
-        <!-- Incluimos el formulario parcial con datos -->
+        <!-- formulario parcial con datos -->
         @include('notificacion._form', ['notificacion' => $notificacion])
 
         <!-- Botones -->

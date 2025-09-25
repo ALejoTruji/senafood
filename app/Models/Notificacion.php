@@ -13,10 +13,10 @@ class Notificacion extends Model
 
     protected $casts = [
         'fecha_envio' => 'datetime',
-        'fechaLeida' => 'datetime',
-        'idUsuario' => 'int',
-        'idCarrito' => 'int',
-        'leida' => 'boolean',
+        'fechaLeida'  => 'datetime',
+        'idUsuario'   => 'int',
+        'idCarrito'   => 'int',
+        'leida'       => 'boolean',
     ];
 
     protected $fillable = [
@@ -30,10 +30,10 @@ class Notificacion extends Model
 
     protected static function booted()
     {
-    static::creating(function ($notificacion) {
-        if (empty($notificacion->fecha_envio)) {
-            $notificacion->fecha_envio = now();
-        }
+        static::creating(function ($notificacion) {
+            if (empty($notificacion->fecha_envio)) {
+                $notificacion->fecha_envio = now();
+            }
         });
     }
 
@@ -41,5 +41,11 @@ class Notificacion extends Model
     public function carrito()
     {
         return $this->belongsTo(Carrito::class, 'idCarrito', 'idCarrito');
+    }
+
+    // 🔹 Relación con Usuario
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'idUsuario', 'id');
     }
 }

@@ -23,13 +23,12 @@ class StoreNotificacionRequest extends FormRequest
     {
         return [
             'mensaje'     => 'required|string|max:255',
-            'fecha_envio'  => 'required|date',
-            'idUsuario'   => 'required|integer|exists:users,id',
             'idCarrito'   => 'nullable|integer|exists:carrito,idCarrito',
             'leida'       => 'boolean',
             'fechaLeida'  => 'nullable|date',
         ];
     }
+
 
     /**
      * Mensajes de error personalizados.

@@ -1,4 +1,4 @@
-<!-- Usamos el layout principal de Jetstream -->
+<!-- layout principal de Jetstream -->
 <x-app-layout>
     
     <!-- Slot para el encabezado -->
@@ -43,12 +43,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Recorremos la colección de notificaciones -->
+                            <!-- Recorre la colección de notificaciones -->
                             @foreach ($notificaciones as $item)
                                 <tr>
                                     <td class="px-4 py-2 border">{{ $item->mensaje }}</td>
                                     <td class="px-4 py-2 border">{{ $item->fecha_envio }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->idUsuario }}</td>
+                                    <td class="px-4 py-2 border">{{ $item->usuario->name ?? 'Usuario no encontrado' }}</td>
                                     <td class="px-4 py-2 border">{{ $item->idCarrito }}</td>
                                     <td class="px-4 py-2 border">
                                         <!-- Botón Editar -->
