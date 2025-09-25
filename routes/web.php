@@ -6,6 +6,7 @@ use App\Http\Controllers\Inventario\InventarioController;
 use App\Http\Controllers\Carrito\CarritoController;
 use App\Http\Controllers\Proveedor\ProveedorController;
 use App\Http\Controllers\Notificacion\NotificacionController;
+use App\Http\Controllers\Ordencompra\OrdencompraController;
 
 Route::get('/', function () {
     return auth()->check()
@@ -33,6 +34,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     ->resource('notificacion', NotificacionController::class)
     ->names('notificacion');
 
+//Ruta Orden de compra (📌 corregida para usar id en vez de modelo completo)
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
+    ->resource('ordencompra', OrdencompraController::class)
+    ->names('ordencompra');
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -48,5 +54,3 @@ Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index
 Route::post('/carrito/add', [CarritoController::class, 'add'])->name('carrito.add');
 Route::post('/carrito/remove', [CarritoController::class, 'remove'])->name('carrito.remove');
 Route::post('/carrito/clear', [CarritoController::class, 'clear'])->name('carrito.clear');
-
-
