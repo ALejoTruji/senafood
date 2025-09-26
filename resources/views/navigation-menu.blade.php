@@ -60,8 +60,17 @@
                         {{ __('Notificacion') }}
                     </x-nav-link>
                 </div>
+
+                <!--Enlace PQRSF-->
+                <div class="flex justify-center flex-1">
+                    <x-nav-link href="{{ route('pqrsf.index') }}" :active="request()->routeIs('pqrsf.*')">
+                        {{ __('PQRSF') }}
+                    </x-nav-link>
+                </div>
             </div>
             
+            
+
             <!-- 🔹 SECCIÓN DERECHA DE LA NAVBAR (equipos, usuario, etc.) -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <!--Dropdown de Equipos () -->
@@ -224,6 +233,11 @@
             <!-- Nuevo enlace al Proveedor en responsive -->
             <x-responsive-nav-link href="{{ route('notificacion.index') }}" :active="request()->routeIs('notificacion.*')">
                 {{ __('Notificacion') }}
+            </x-responsive-nav-link>
+
+            <!-- Enlace PQRSF en responsive -->
+            <x-responsive-nav-link href="{{ route('pqrsf.index') }}" :active="request()->routeIs('pqrsf.*')">
+                {{ __('PQRSF') }}
             </x-responsive-nav-link>
 
             <!-- Nuevo enlace al Proveedor en responsive -->

@@ -9,38 +9,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('notificacion', function (Blueprint $table) {
-            // Obtenemos el schema manager de Doctrine
-            $sm = Schema::getConnection()->getDoctrineSchemaManager();
-            $doctrineTable = $sm->listTableDetails('notificacion');
+            // Primero eliminamos la foreign key si existe
+            $table->dropForeign(['idCarrito']);
 
-            // Si existe la foreign key, la eliminamos
-            if ($doctrineTable->hasForeignKey('notificacion_idcarrito_foreign')) {
-                $table->dropForeign('notificacion_idcarrito_foreign');
-            }
-
-            // Si existe el campo, lo eliminamos
-            if (Schema::hasColumn('notificacion', 'idCarrito')) {
-                $table->dropColumn('idCarrito');
-            }
-        });
-
-        // Ahora recreamos el campo y la foreign key correcta
-        Schema::table('notificacion', function (Blueprint $table) {
-            $table->unsignedBigInteger('idCarrito')->nullable()->after('idUsuario');
-
+            // Luego la volvemos a crear con las reglas que necesites
             $table->foreign('idCarrito')
-                ->references('idCarrito')->on('carrito')
-                ->onDelete('cascade');
+                  ->references('idCarrito')->on('carrito')
+                  ->onDelete('cascade');
         });
     }
 
     public function down(): void
     {
         Schema::table('notificacion', function (Blueprint $table) {
-            if (Schema::hasColumn('notificacion', 'idCarrito')) {
-                $table->dropForeign(['idCarrito']);
-                $table->dropColumn('idCarrito');
-            }
+            $table->dropForeign(['idCarrito']);
+            $table->foreign('idCarrito')
+                  ->references('idCarrito')->on('carrito');
         });
     }
 };

@@ -7,6 +7,9 @@ use App\Http\Controllers\Carrito\CarritoController;
 use App\Http\Controllers\Proveedor\ProveedorController;
 use App\Http\Controllers\Notificacion\NotificacionController;
 use App\Http\Controllers\Ordencompra\OrdencompraController;
+use App\Http\Controllers\Pqrsf\PqrsfController;
+
+
 
 Route::get('/', function () {
     return auth()->check()
@@ -48,6 +51,11 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+// 📌 Rutas del pqrsf
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
+    ->resource('pqrsf', PqrsfController::class)
+    ->names('pqrsf');
 
 // 📌 Rutas del carrito
 Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index');
