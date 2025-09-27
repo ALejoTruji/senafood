@@ -10,6 +10,13 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             <h1 class="text-2xl font-bold mb-4 text-green-600">Proveedor</h1>
 
+            <p>
+                <a href="{{ route('proveedor.create') }}" 
+                class="bg-green-500 hover:bg-green-500 text-white font-semibold px-2 py-2 rounded-lg shadow">
+                Añadir Proveedor
+                </a>
+            </p>
+
                 @if($proveedor->count() > 0)
                     <table id ="proveedor" class="table-auto w-full border border-green-300">
                         <thead>
@@ -19,6 +26,7 @@
                                 <th class="px-4 py-2 border">Telefono</th>
                                 <th class="px-4 py-2 border">Direccion</th>
                                 <th class="px-4 py-2 border">NIT</th>
+                                <th class="px-4 py-2 border">Modificar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -29,6 +37,22 @@
                                     <td class="px-4 py-2 border">{{ $item->telefono }}</td>
                                     <td class="px-4 py-2 border">{{ $item->direccion }}</td>
                                     <td class="px-4 py-2 border">{{ $item->NIT }}</td>
+                                    <td class="px-4 py-2 border text-center">
+                                        <a href="{{ route('proveedor.edit', $item->idProveedor) }}"
+                                        class="bg-green-400 hover:bg-green-500 text-white font-semibold px-3 py-1 rounded-lg shadow">
+                                        Modificar
+                                        </a>
+
+                                        <form action="{{ route('proveedor.destroy', $item->idProveedor) }}" method="POST" style="display:inline"
+                                            onsubmit="return confirm('¿Eliminar este Proveedor?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                    class="bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1 rounded-lg shadow">
+                                                Eliminar
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -43,8 +67,7 @@
 
     {{-- jQuery + DataTables (CDN) --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
-    <link rel="stylesheet"
-    href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
