@@ -4,7 +4,25 @@
             <x-authentication-card-logo />
         </x-slot>
 
-        <x-validation-errors class="mb-4" />
+        @if ($errors->any())
+            <div class="mb-4">
+                <div class="font-medium text-red-600">
+                    ¡Ups! Algo salió mal.
+                </div>
+
+                <ul class="mt-3 list-disc list-inside text-sm text-red-600">
+                    @foreach ($errors->all() as $error)
+                        <li>
+                            @if ($error == "The email has already been taken.")
+                                El correo electrónico suministrado ya se encuentra resgistrado.
+                            @else
+                                {{ $error }}
+                            @endif
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <form method="POST" action="{{ route('register') }}">
             @csrf
