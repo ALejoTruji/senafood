@@ -1,4 +1,3 @@
-<!-- layout principal de Jetstream -->
 <x-app-layout>
     
     <!-- Slot para el encabezado -->
@@ -15,19 +14,48 @@
             <!-- Caja blanca con sombra -->
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
 
-                <!-- Título -->
-                <h1 class="text-2xl font-bold mb-4 text-green-600">Listado de Notificaciones</h1>
-                
-                <!-- Botón crear -->
-                <p>
-                    <a href="{{ route('notificacion.create') }}" class="bg-green-600 text-white px-4 py-2 rounded">
+                <!-- Encabezado con botones -->
+                <div class="flex justify-between items-center mb-6">
+                    <!-- Botón de informes con íconos -->
+                    <div class="relative">
+                        <button id="informesBtn" 
+                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow flex items-center space-x-2">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Informes</span>
+                        </button>
+
+                        <div id="informesMenu" 
+                            class="hidden absolute mt-2 left-0 bg-white shadow-lg px-4 py-3 rounded-lg border border-gray-200 z-50">
+                            <div class="flex space-x-6">
+                                <button class="export-btn" data-type="copy" title="Copiar">
+                                    <i class="fas fa-copy text-green-600 text-2xl"></i>
+                                </button>
+                                <button class="export-btn" data-type="csv" title="CSV">
+                                    <i class="fas fa-file-csv text-green-600 text-2xl"></i>
+                                </button>
+                                <button class="export-btn" data-type="excel" title="Excel">
+                                    <i class="fas fa-file-excel text-green-600 text-2xl"></i>
+                                </button>
+                                <button class="export-btn" data-type="pdf" title="PDF">
+                                    <i class="fas fa-file-pdf text-green-600 text-2xl"></i>
+                                </button>
+                                <button class="export-btn" data-type="print" title="Imprimir">
+                                    <i class="fas fa-print text-green-600 text-2xl"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón crear notificación -->
+                    <a href="{{ route('notificacion.create') }}" 
+                        class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-lg shadow">
                         Nueva Notificación
                     </a>
-                </p>
+                </div>
 
                 <!-- Mensaje flash -->
                 @if (session('success'))
-                    <p style="color:green">{{ session('success') }}</p>
+                    <p class="text-green-600 font-semibold">{{ session('success') }}</p>
                 @endif
 
                 <!-- Tabla de notificaciones -->
@@ -43,19 +71,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Recorre la colección de notificaciones -->
                             @foreach ($notificaciones as $item)
                                 <tr>
                                     <td class="px-4 py-2 border">{{ $item->mensaje }}</td>
                                     <td class="px-4 py-2 border">{{ $item->fecha_envio }}</td>
                                     <td class="px-4 py-2 border">{{ $item->usuario->name ?? 'Usuario no encontrado' }}</td>
                                     <td class="px-4 py-2 border">{{ $item->idCarrito }}</td>
-                                    <td class="px-4 py-2 border">
-                                        <!-- Botón Editar -->
+                                    <td class="px-4 py-2 border text-center">
                                         <a href="{{ route('notificacion.edit', $item->idNotificacion) }}" 
-                                        class="bg-yellow-500 text-white px-2 py-1 rounded">Editar</a>
+                                           class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-lg shadow">
+                                           Editar
+                                        </a>
 
-                                        <!-- Botón Eliminar -->
                                         <form action="{{ route('notificacion.destroy', $item->idNotificacion) }}" 
                                             method="POST" 
                                             style="display:inline" 
@@ -63,7 +90,9 @@
                                             @csrf 
                                             @method('DELETE')
                                             <button type="submit" 
-                                                    class="bg-red-600 text-white px-2 py-1 rounded">Eliminar</button>
+                                                    class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg shadow">
+                                                Eliminar
+                                            </button>
                                         </form>
                                     </td>
                                 </tr>
@@ -71,7 +100,6 @@
                         </tbody>
                     </table>
                 @else
-                    <!-- Si no hay registros -->
                     <p class="text-gray-600">No hay notificaciones.</p>
                 @endif
             </div>
@@ -93,14 +121,45 @@
     <!-- Configuración de DataTables -->
     <script>
         $(function() {
-            $('#notificacion').DataTable({
+            var table = $('#notificacion').DataTable({
                 pageLength: 20,
                 dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json'
-                },
-                buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+                }
+            });
+
+            // Mostrar/ocultar menú de informes
+            $('#informesBtn').on('click', function() {
+                $('#informesMenu').toggleClass('hidden');
+            });
+
+            // Exportar según ícono
+            $('.export-btn').on('click', function() {
+                var type = $(this).data('type');
+                table.button('.buttons-' + type).trigger();
             });
         });
     </script>
+
+    <style>
+        /* Hover sobre íconos */
+        #informesMenu button i {
+            transition: transform 0.2s;
+        }
+
+        #informesMenu button i:hover {
+            transform: scale(1.2);
+        }
+
+        /* Ocultar botones originales de DataTables */
+        .dt-buttons {
+            display: none !important;
+        }
+    </style>
+
+    <!-- Font Awesome para íconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
 </x-app-layout>
