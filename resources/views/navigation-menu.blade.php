@@ -7,7 +7,7 @@
                 <!--LOGO -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <img src="{{ asset('images/senafood_logo.jpeg') }}" alt="Senafood Logo" style="height: 70px; width: auto;" />
+                        <img src="{{ asset('images/senafood_logo.png') }}" alt="Senafood Logo" style="height: 70px; width: auto;" />
                     </a>
                 </div>
 

@@ -1,14 +1,18 @@
-<div class="p-6 lg:p-8 bg-white border-b border-gray-200">
-    <img src="{{ asset('images/senafood_logo.jpeg') }}" alt="Sena Food Logo" class="block h-12 w-auto" />
+<div class="p-6 lg:p-8 bg-white border-b border-gray-200 text-center">
+    <!-- Logo centrado y más grande -->
+    <img src="{{ asset('images/senafood_logo.png') }}" alt="Sena Food Logo" class="mx-auto h-20 w-auto" />
 
-    <h1 class="mt-8 text-2xl font-medium text-gray-900">
-        ¡Bienvenido a Sena Food!
+    <!-- Título en verde y centrado -->
+    <h1 class="mt-8 text-xl font-bold text-green-600">
+        ¡Bienvenido a SenaFOOD!
     </h1>
-        <!--Aqui puede ir algo adicional debajo del bienvenido-->
-    <p class="mt-6 text-gray-500 leading-relaxed">
-        
+
+    <!-- Texto adicional opcional -->
+    <p class="mt-4 text-gray-600 leading-relaxed text-m max-w-xl mx-auto">
+        Explora la variedad y el sabor optimizando tu tiempo. Estamos aquí para ofrecerte una experiencia gastronómica eficiente y deliciosa.
     </p>
 </div>
+
 
 <div class="bg-gray-200 bg-opacity-25 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 p-6 lg:p-8">
     <div>
