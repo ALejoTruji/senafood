@@ -4,95 +4,117 @@ namespace App\Http\Controllers\Notificacion;
 
 use App\Http\Controllers\Controller;
 use App\Models\Notificacion;
-use App\Http\Requests\StoreNotificacionRequest;
-use App\Http\Requests\UpdateNotificacionRequest;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NotificacionController extends Controller
 {
     /**
-     * Mostrar todas las notificaciones.
+     * Muestra todas las notificaciones del usuario autenticado.
      */
     public function index()
     {
-        // Trae todas las notificaciones ordenadas por fecha de envío descendente
-        $notificaciones = Notificacion::orderBy('fecha_envio', 'desc')->get();
+        // Obtiene las notificaciones asociadas al usuario logueado
+        $notificaciones = Notificacion::where('idUsuario', Auth::id())
+            ->orderBy('created_at', 'desc') // Ordenar por fecha de creación (más recientes primero)
+            ->get();
 
-        // Pasa los datos a la vista
+        // Retorna la vista index con la lista de notificaciones
         return view('notificacion.index', compact('notificaciones'));
     }
 
     /**
-     * Muestra el formulario para crear una nueva notificación.
+     * Muestra el formulario para editar una notificación.
      */
-    public function create()
+    public function edit($id)
     {
-        // Retorna la vista con el formulario de creación
-        return view('notificacion.create');
-    }
+        // Busca la notificación por ID o lanza un error 404 si no existe
+        $notificacion = Notificacion::findOrFail($id);
 
-    /**
-     * Guarda una nueva notificación en la base de datos.
-     */
-    public function store(StoreNotificacionRequest $request)
-    {
-        $data = $request->validated();
-
-        // Forzar siempre el usuario autenticado y la fecha
-        $data['idUsuario'] = auth()->id();
-        $data['fecha_envio'] = now();
-
-        Notificacion::create($data);
-
-        return redirect()
-            ->route('notificacion.index')
-            ->with('success', 'Notificación creada correctamente.');
-}
-
-    /**
-     * Mostra una notificación específica.
-     */
-    public function show(Notificacion $notificacion)
-    {
-        // Devolve la vista con los detalles de la notificación
-        return view('notificacion.show', compact('notificacion'));
-    }
-
-    /**
-     * Mostra el formulario para editar una notificación.
-     */
-    public function edit(Notificacion $notificacion)
-    {
-        // Pasam la notificación a la vista de edición
+        // Retorna la vista de edición con la notificación encontrada
         return view('notificacion.edit', compact('notificacion'));
     }
 
     /**
-     * Actualiza una notificación existente en la base de datos.
+     * Actualiza los datos de una notificación en la base de datos.
      */
-    public function update(UpdateNotificacionRequest $request, Notificacion $notificacion)
+    public function update(Request $request, $id)
     {
-        // Validar datos
-        $data = $request->validated();
+        // Busca la notificación a actualizar
+        $notificacion = Notificacion::findOrFail($id);
 
-        // Actualizar la notificación
-        $notificacion->update($data);
+        // Valida los campos que vienen del formulario
+        $validated = $request->validate([
+            'mensaje' => 'required|string|max:255', // El mensaje es obligatorio
+            'fecha_envio' => 'nullable|date',       // La fecha puede ser nula, pero debe ser fecha válida
+            'leida' => 'boolean',                   // El estado debe ser verdadero/falso
+        ]);
 
-        return redirect()
-            ->route('notificacion.index')
-            ->with('ok', 'Notificación actualizada correctamente.');
+        // Actualiza la notificación con los datos validados
+        $notificacion->update($validated);
+
+        // Redirige al detalle de la notificación con mensaje de éxito
+        return redirect()->route('notificacion.show', $notificacion->idNotificacion)
+                        ->with('success', 'Notificación actualizada correctamente');
     }
 
     /**
      * Elimina una notificación de la base de datos.
      */
-    public function destroy(Notificacion $notificacion)
+    public function destroy($id)
     {
-        try {
-            $notificacion->delete();
-            return back()->with('ok', 'Notificación eliminada correctamente.');
-        } catch (\Throwable $e) {
-            return back()->withErrors('No se puede eliminar: tiene registros relacionados.');
-        }
+        // Busca la notificación
+        $notificacion = Notificacion::findOrFail($id);
+
+        // La elimina
+        $notificacion->delete();
+
+        // Redirige al listado con mensaje de éxito
+        return redirect()->route('notificacion.index')
+                        ->with('success', 'Notificación eliminada correctamente');
     }
+
+    /**
+     * Marca una notificación como leída sin necesidad de abrirla.
+     */
+    public function marcarLeida($id)
+    {
+        // Busca la notificación
+        $notificacion = Notificacion::findOrFail($id);
+
+        // Cambia el estado a "leída"
+        $notificacion->leida = true;
+
+        // Guarda el cambio en la BD
+        $notificacion->save();
+
+        // Regresa a la página anterior
+        return redirect()->back();
+    }
+
+    /**
+     * Muestra el detalle de una notificación.
+     * Además, si aún no estaba leída, la marca automáticamente como leída.
+     */
+    public function show($id)
+    {
+        // Busca la notificación
+        $notificacion = Notificacion::findOrFail($id);
+
+        // Si aún no estaba leída, la marca como leída
+        if (!$notificacion->leida) {
+            $notificacion->leida = true;
+            $notificacion->save();
+        }
+
+        // ✅ Si la notificación está asociada a una PQRSF, redirigir al detalle
+        if ($notificacion->pqrsf) {
+            return redirect()->route('pqrsf.show', $notificacion->pqrsf->idPQRSF);
+        }
+
+        // ✅ Caso contrario, sigue mostrando la vista normal de notificación
+        return view('notificacion.show', compact('notificacion'));
+    }
+
+
 }

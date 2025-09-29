@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use App\Models\Inventario;
+use App\Models\Notificacion;
 use App\Http\Requests\StoreProductoRequest;
 use App\Http\Requests\UpdateProductoRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ProductoController extends Controller
 {
@@ -112,17 +114,17 @@ class ProductoController extends Controller
         }
     }
 
-    /**
-     * <!-- Muestra un producto específico -->
-     */
+    
+     // Muestra un producto específico -->
+     
     public function show(Producto $producto)
     {
         // Aquí puedes mostrar el detalle de un producto si quieres
     }
 
-    /**
-     * <!-- Muestra el formulario para editar un producto -->
-     */
+    
+    //Muestra el formulario para editar un producto -->
+     
     public function edit(Producto $producto)
     {
         return view('producto.edit', [
@@ -134,7 +136,8 @@ class ProductoController extends Controller
     /**
      * <!-- Actualiza un producto existente -->
      */
-    public function update(Request $request, $id)
+
+public function update(Request $request, $id)
     {
         $producto = Producto::findOrFail($id);
 
@@ -152,11 +155,12 @@ class ProductoController extends Controller
 
         $producto->fill($validated);
 
-        // ✅ Si hay nueva imagen, reemplazar la anterior
+        // Si hay nueva imagen, reemplazar la anterior
         if ($request->hasFile('imagen')) {
             $file = $request->file('imagen');
             $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) 
                 . '.' . $file->getClientOriginalExtension();
+
             // Se guarda en storage/app/public/productos
             $file->storeAs('productos', $filename, 'public');
 
@@ -166,8 +170,18 @@ class ProductoController extends Controller
 
         $producto->save();
 
+        //  Notificación si el stock es menor a 10
+        if ($producto->stock < 10) {
+            Notificacion::create([
+                'mensaje'   => "⚠️ El producto '{$producto->nombre}' tiene stock bajo ({$producto->stock}).",
+                'idUsuario' => Auth::id(),
+                'leida'     => false,
+            ]);
+        }
+
         return redirect()->route('producto.index')->with('success', 'Producto actualizado con éxito');
     }
+
 
     /**
      * <!-- Elimina un producto de la base de datos -->

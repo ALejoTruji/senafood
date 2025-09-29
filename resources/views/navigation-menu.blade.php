@@ -69,63 +69,36 @@
                 </div>
             </div>
             
-            
-
             <!-- 🔹 SECCIÓN DERECHA DE LA NAVBAR (equipos, usuario, etc.) -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <!--Dropdown de Equipos () -->
-                @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
-                    <div class="ms-3 relative">
-                        <x-dropdown align="right" width="60">
-                            <!-- Botón para mostrar el nombre del equipo actual -->
-                            <x-slot name="trigger">
-                                <span class="inline-flex rounded-md">
-                                    <button type="button" class="inline-flex items-center px-3 py-2 ...">
-                                        {{ Auth::user()->currentTeam->name }}
 
-                                        <!-- Icono de flecha hacia abajo -->
-                                        <svg class="ms-2 -me-0.5 size-4" ...>
-                                            <path ... />
-                                        </svg>
-                                    </button>
-                                </span>
-                            </x-slot>
+                <!-- 🔔 Notificaciones -->
+                <div class="ms-3 relative">
+                    <a href="{{ route('notificacion.index') }}" class="relative flex items-center">
+                        <!-- Icono campana -->
+                        <svg xmlns="http://www.w3.org/2000/svg" 
+                        fill="none" viewBox="0 0 24 24" stroke-width="1.5" 
+                        stroke="currentColor" 
+                        class="w-7 h-7 text-yellow-400 animate-bounce">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 18.75a1.5 1.5 0 01-3 0m9-3.75V11.1a6.375 6.375 0 00-5.22-6.3 
+                                2.25 2.25 0 10-4.56 0 6.375 6.375 0 00-5.22 6.3v3.9l-1.5 
+                                1.5h18l-1.5-1.5z" />
+                        </svg>
 
-                            <!--Contenido del menú de equipos -->
-                            <x-slot name="content">
-                                <div class="w-60">
-                                    <!-- Gestión del equipo -->
-                                    <div class="block px-4 py-2 text-xs text-gray-400">
-                                        {{ __('Manage Team') }}
-                                    </div>
 
-                                    <!-- Configuración del equipo -->
-                                    <x-dropdown-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
-                                        {{ __('Team Settings') }}
-                                    </x-dropdown-link>
-
-                                    <!-- Crear un nuevo equipo (si el usuario tiene permisos) -->
-                                    @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
-                                        <x-dropdown-link href="{{ route('teams.create') }}">
-                                            {{ __('Create New Team') }}
-                                        </x-dropdown-link>
-                                    @endcan
-
-                                    <!-- Cambiar de equipo si el usuario pertenece a más de uno -->
-                                    @if (Auth::user()->allTeams()->count() > 1)
-                                        <div class="border-t border-gray-200"></div>
-                                        <div class="block px-4 py-2 text-xs text-gray-400">
-                                            {{ __('Switch Teams') }}
-                                        </div>
-                                        @foreach (Auth::user()->allTeams() as $team)
-                                            <x-switchable-team :team="$team" />
-                                        @endforeach
-                                    @endif
-                                </div>
-                            </x-slot>
-                        </x-dropdown>
-                    </div>
-                @endif
+                        <!-- Contador rojo de notificaciones no leídas -->
+                        @php
+                            $unread = \App\Models\Notificacion::where('idUsuario', Auth::id())
+                                        ->where('leida', false)
+                                        ->count();
+                        @endphp
+                        @if($unread > 0)
+                            <span class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full px-1">
+                                {{ $unread }}
+                            </span>
+                        @endif
+                    </a>
+                </div>
 
                 <!-- Dropdown de Usuario -->
                 <div class="ms-3 relative">
@@ -206,114 +179,6 @@
 
     <!-- 🔹 Menú Responsive (para móviles) -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <!-- Links del menú responsive -->
-            <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-
-            <x-responsive-nav-link href="{{ route('producto.index') }}" :active="request()->routeIs('producto.*')">
-                {{ __('Productos') }}
-            </x-responsive-nav-link>
-
-            <x-responsive-nav-link href="{{ route('inventario.index') }}" :active="request()->routeIs('inventario.*')">
-                {{ __('Inventario') }}
-            </x-responsive-nav-link>
-
-            <!-- Enlace al catálogo -->
-            <x-responsive-nav-link href="{{ route('catalogo') }}" :active="request()->routeIs('catalogo')">
-                {{ __('Catálogo') }}
-            </x-responsive-nav-link>
-
-            <!-- Nuevo enlace al Proveedor en responsive -->
-            <x-responsive-nav-link href="{{ route('proveedor.index') }}" :active="request()->routeIs('proveedor.*')">
-                {{ __('Proveedor') }}
-            </x-responsive-nav-link>
-
-            <!-- Nuevo enlace al Proveedor en responsive -->
-            <x-responsive-nav-link href="{{ route('notificacion.index') }}" :active="request()->routeIs('notificacion.*')">
-                {{ __('Notificacion') }}
-            </x-responsive-nav-link>
-
-            <!-- Enlace PQRSF en responsive -->
-            <x-responsive-nav-link href="{{ route('pqrsf.index') }}" :active="request()->routeIs('pqrsf.*')">
-                {{ __('PQRSF') }}
-            </x-responsive-nav-link>
-
-            <!-- Nuevo enlace al Proveedor en responsive -->
-            <x-responsive-nav-link href="{{ route('ordencompra.index') }}" :active="request()->routeIs('ordencompra.*')">
-                {{ __('O C') }}
-            </x-responsive-nav-link>
-        </div>
-
-        <!-- Opciones de usuario en responsive -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="flex items-center px-4">
-                <!-- Foto de perfil -->
-                @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-                    <div class="shrink-0 me-3">
-                        <img class="size-10 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
-                    </div>
-                @endif
-
-                <!-- Nombre y email del usuario -->
-                <div>
-                    <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                    <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-                </div>
-            </div>
-
-            <!-- Links de gestión de cuenta en responsive -->
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
-                    <x-responsive-nav-link href="{{ route('api-tokens.index') }}" :active="request()->routeIs('api-tokens.index')">
-                        {{ __('API Tokens') }}
-                    </x-responsive-nav-link>
-                @endif
-
-                <!-- Logout -->
-                <form method="POST" action="{{ route('logout') }}" x-data>
-                    @csrf
-                    <x-responsive-nav-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-
-                <!-- Gestión de equipos en responsive -->
-                @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
-                    <div class="border-t border-gray-200"></div>
-                    <div class="block px-4 py-2 text-xs text-gray-400">
-                        {{ __('Manage Team') }}
-                    </div>
-
-                    <!-- Configuración de equipo -->
-                    <x-responsive-nav-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}" :active="request()->routeIs('teams.show')">
-                        {{ __('Team Settings') }}
-                    </x-responsive-nav-link>
-
-                    <!-- Crear nuevo equipo -->
-                    @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
-                        <x-responsive-nav-link href="{{ route('teams.create') }}" :active="request()->routeIs('teams.create')">
-                            {{ __('Create New Team') }}
-                        </x-responsive-nav-link>
-                    @endcan
-
-                    <!-- Cambiar de equipo -->
-                    @if (Auth::user()->allTeams()->count() > 1)
-                        <div class="border-t border-gray-200"></div>
-                        <div class="block px-4 py-2 text-xs text-gray-400">
-                            {{ __('Switch Teams') }}
-                        </div>
-                        @foreach (Auth::user()->allTeams() as $team)
-                            <x-switchable-team :team="$team" component="responsive-nav-link" />
-                        @endforeach
-                    @endif
-                @endif
-            </div>
-        </div>
+        ...
     </div>
 </nav>

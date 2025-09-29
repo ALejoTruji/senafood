@@ -9,24 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::table('notificacion', function (Blueprint $table) {
-            if (!Schema::hasColumn('notificacion', 'leida')) {
-                $table->boolean('leida')->default(0);
+            // Solo agrega los timestamps si no existen
+            if (!Schema::hasColumn('notificacion', 'created_at') && !Schema::hasColumn('notificacion', 'updated_at')) {
+                $table->timestamps();
             }
         });
     }
 
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::table('notificacion', function (Blueprint $table) {
-            // eliminamos la columna si hacemos rollback
-            $table->dropColumn('fechaLeida');
+            $table->dropColumn(['created_at', 'updated_at']);
         });
     }
+
 };

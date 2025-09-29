@@ -5,21 +5,41 @@ namespace App\Http\Controllers\Pqrsf;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Pqrsf;
+use App\Models\Notificacion;
 use Illuminate\Support\Facades\Auth;
 
 class PqrsfController extends Controller
 {
     /**
-     * Listar todas las PQRSF
+     * Mostra todas las PQRSF (con buscador y paginación)
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pqrsfs = Pqrsf::with('usuario')->latest('idPQRSF')->get();
+        // Construye la consulta base, cargando la relación con el usuario
+        $query = Pqrsf::with('usuario')->latest('idPQRSF');
+
+        // Si el request trae un parámetro de búsqueda (?search=texto)
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            // Condiciones para filtrar por tipo, descripción o estado
+            $query->where(function($q) use ($search) {
+                $q->where('tipo', 'LIKE', "%{$search}%")
+                  ->orWhere('descripcion', 'LIKE', "%{$search}%")
+                  ->orWhere('estado', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Consulta con paginación de 10 registros por página
+        // y conserva los parámetros de búsqueda en los links de paginación
+        $pqrsfs = $query->paginate(10)->appends($request->all());
+
+        // Retorna la vista con los resultados
         return view('pqrsf.index', compact('pqrsfs'));
     }
 
     /**
-     * Formulario para crear nueva PQRSF
+     * Mostra formulario para crear una nueva PQRSF
      */
     public function create()
     {
@@ -27,30 +47,44 @@ class PqrsfController extends Controller
     }
 
     /**
-     * Guardar nueva PQRSF
+     * Guarda en la BD una nueva PQRSF
      */
     public function store(Request $request)
     {
+        // Validación de los campos
         $request->validate([
             'tipo' => 'required|string|max:50',
             'descripcion' => 'required|string|max:500',
         ]);
 
-        Pqrsf::create([
+        // Crear la PQRSF
+        $pqrsf = Pqrsf::create([
             'tipo' => $request->tipo,
             'descripcion' => $request->descripcion,
-            'estado' => 'pendiente', // estado inicial
-            'idUsuario' => Auth::id(), // usuario autenticado
-            'idCarrito' => $request->idCarrito ?? null,
-            'create_at' => now(),
-            'update_at' => now(),
+            'estado' => 'pendiente', // Estado inicial
+            'idUsuario' => Auth::id(),
+            'id_carrito' => $request->id_carrito ?? null,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
-        return redirect()->route('pqrsf.index')->with('success', 'PQRSF creada correctamente.');
+        // Crear la notificación enlazada con la PQRSF recién creada
+        Notificacion::create([
+            'mensaje'   => 'Se ha creado una nueva PQRSF (ID: ' . $pqrsf->idPQRSF . ')',
+            'idUsuario' => Auth::id(),
+            'idPQRSF'   => $pqrsf->idPQRSF, // 🔗 relación con la PQRSF
+            'fecha_envio' => now(),
+            'leida'     => false,
+        ]);
+
+        // Redirigir con mensaje de éxito
+        return redirect()->route('pqrsf.index')
+                        ->with('success', 'PQRSF creada correctamente.');
     }
 
+
     /**
-     * Mostrar una PQRSF específica
+     * Muostra el detalle de una PQRSF específica
      */
     public function show(string $id)
     {
@@ -59,7 +93,7 @@ class PqrsfController extends Controller
     }
 
     /**
-     * Formulario para editar PQRSF
+     * Muostra formulario para editar una PQRSF
      */
     public function edit(string $id)
     {
@@ -68,35 +102,42 @@ class PqrsfController extends Controller
     }
 
     /**
-     * Actualizar PQRSF
+     * Actualiza los datos de una PQRSF existente
      */
     public function update(Request $request, string $id)
     {
+        // Validación de los campos
         $request->validate([
             'tipo' => 'required|string|max:50',
             'descripcion' => 'required|string|max:500',
             'estado' => 'required|string|max:50',
         ]);
 
+        // Buscar la PQRSF por ID
         $pqrsf = Pqrsf::findOrFail($id);
+
+        // Actualizar los valores
         $pqrsf->update([
             'tipo' => $request->tipo,
             'descripcion' => $request->descripcion,
             'estado' => $request->estado,
-            'update_at' => now(),
+            'updated_at' => now(),
         ]);
 
+        // Redirige con mensaje de éxito
         return redirect()->route('pqrsf.index')->with('success', 'PQRSF actualizada correctamente.');
     }
 
     /**
-     * Eliminar PQRSF
+     * Elimina una PQRSF
      */
     public function destroy(string $id)
     {
+        // Busca y elimina el registro
         $pqrsf = Pqrsf::findOrFail($id);
         $pqrsf->delete();
 
+        // Redirige con mensaje de éxito
         return redirect()->route('pqrsf.index')->with('success', 'PQRSF eliminada correctamente.');
     }
 }

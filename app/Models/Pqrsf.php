@@ -28,35 +28,40 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Pqrsf extends Model
 {
-	protected $table = 'pqrsf';
-	protected $primaryKey = 'idPQRSF';
-	public $timestamps = false;
+    protected $table = 'pqrsf';
+    protected $primaryKey = 'idPQRSF';
 
-	protected $casts = [
-		'idUsuario' => 'int',
-		'idCarrito' => 'int',
-		'create_at' => 'datetime',
-		'update_at' => 'datetime'
-	];
+    // 👇 Le decimos a Laravel cómo se llaman realmente las columnas de fecha
+    const CREATED_AT = 'create_at';
+    const UPDATED_AT = 'update_at';
 
-	protected $fillable = [
-		'tipo',
-		'descripcion',
-		'estado',
-		'idUsuario',
-		'idCarrito',
-		'create_at',
-		'update_at'
-	];
+    public $timestamps = true;
 
-	public function usuario()
-	{
-    return $this->belongsTo(User::class, 'idUsuario', 'id');
-	}
+    protected $casts = [
+        'idUsuario' => 'int',
+        'idCarrito' => 'int',
+        'create_at' => 'datetime',
+        'update_at' => 'datetime'
+    ];
 
+    protected $fillable = [
+        'tipo',
+        'descripcion',
+        'estado',
+        'idUsuario',
+        'id_carrito',
+        'create_at',
+        'update_at'
+    ];
 
-	public function carrito()
-	{
-		return $this->belongsTo(Carrito::class, 'idCarrito');
-	}
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'idUsuario', 'id');
+    }
+
+    public function carrito()
+    {
+        return $this->belongsTo(Carrito::class, 'id_carrito');
+    }
 }
+

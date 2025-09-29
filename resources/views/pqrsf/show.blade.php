@@ -37,10 +37,19 @@
             <!-- Botones de acción -->
             <div class="mt-6 flex space-x-3">
                 <!-- Botón volver -->
-                <a href="{{ route('pqrsf.index') }}" 
-                class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
-                    ← Volver
-                </a>
+                @if(request()->routeIs('pqrsf.show'))
+                    {{-- Si vengo del módulo PQRSF --}}
+                    <a href="{{ route('pqrsf.index') }}" 
+                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+                        ← Volver
+                    </a>
+                @elseif(request()->routeIs('notificacion.show'))
+                    {{-- Si vengo del módulo Notificación --}}
+                    <a href="{{ route('notificacion.index') }}" 
+                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+                        ← Volver a Notificaciones
+                    </a>
+                @endif
 
                 <!-- Botón editar -->
                 <a href="{{ route('pqrsf.edit', $pqrsf->idPQRSF) }}" 
