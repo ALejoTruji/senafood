@@ -38,7 +38,7 @@ class ProductoController extends Controller
     /**
      * <!-- Guarda un nuevo producto en la base de datos -->
      */
-    public function store(Request $request)
+    public function store(StoreProductoRequest $request)
     {
         // ✅ Validación de datos
         $validated = $request->validate([
@@ -46,9 +46,8 @@ class ProductoController extends Controller
             'descripcion' => 'nullable|string',
             'costo_unitario' => 'required|numeric',
             'stock' => 'required|integer',
-            'fecha_vencimiento' => 'nullable|date',
+            'fecha_vencimiento' => 'nullable|date|after:today',
             'categoria' => 'nullable|string|max:255',
-            'codigo_barras' => 'nullable|string|max:255',
             'estado' => 'required|string',
             'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
         ]);
@@ -79,7 +78,8 @@ class ProductoController extends Controller
             $producto->stock = $validated['stock'];
             $producto->fecha_vencimiento = $validated['fecha_vencimiento'] ?? null;
             $producto->categoria = $validated['categoria'] ?? null;
-            $producto->codigo_barras = $validated['codigo_barras'] ?? null;
+            // Generar código de barras automáticamente con prefijo 77 + timestamp
+            $producto->codigo_barras = '77' . now()->timestamp . rand(10, 99);
             $producto->estado = $validated['estado'];
 
             // ✅ Manejo de imagen
@@ -136,8 +136,7 @@ class ProductoController extends Controller
     /**
      * <!-- Actualiza un producto existente -->
      */
-
-public function update(Request $request, $id)
+    public function update(UpdateProductoRequest $request, $id)
     {
         $producto = Producto::findOrFail($id);
 
@@ -146,9 +145,8 @@ public function update(Request $request, $id)
             'descripcion' => 'nullable|string',
             'costo_unitario' => 'required|numeric',
             'stock' => 'required|integer',
-            'fecha_vencimiento' => 'nullable|date',
+            'fecha_vencimiento' => 'nullable|date|after:today',
             'categoria' => 'nullable|string|max:255',
-            'codigo_barras' => 'nullable|string|max:255',
             'estado' => 'required|string',
             'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
         ]);

@@ -5,16 +5,38 @@
         </x-slot>
 
         <div class="mb-4 text-sm text-gray-600">
-            {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+            {{ __('¿Olvidaste tu contraseña? No hay problema. Simplemente indícanos tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña y podrás elegir una nueva.') }}
         </div>
 
         @session('status')
             <div class="mb-4 font-medium text-sm text-green-600">
-                {{ $value }}
+                @if ($value === 'We have emailed your password reset link.')
+                    Te hemos enviado el enlace para restablecer tu contraseña por correo electrónico.
+                @else
+                    {{ $value }}
+                @endif
             </div>
         @endsession
 
-        <x-validation-errors class="mb-4" />
+        @if ($errors->any())
+            <div class="mb-4">
+                <div class="font-medium text-red-600">
+                    ¡Ups! Algo salió mal.
+                </div>
+
+                <ul class="mt-3 list-disc list-inside text-sm text-red-600">
+                    @foreach ($errors->all() as $error)
+                        <li>
+                            @if ($error == "We can't find a user with that email address.")
+                                No encontramos un usuario con esa dirección de correo electrónico.
+                            @else
+                                {{ $error }}
+                            @endif
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
@@ -25,8 +47,8 @@
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <x-button>
-                    {{ __('Email Password Reset Link') }}
+                <x-button class="bg-orange-500 hover:bg-orange-600 text-white">
+                    {{ __('Enlace para restablecer contraseña') }}
                 </x-button>
             </div>
         </form>

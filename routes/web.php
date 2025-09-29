@@ -39,7 +39,7 @@ Route::post('/notificaciones/{id}/leida', [NotificacionController::class, 'marca
 
 
 //Ruta Orden de compra
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])
     ->resource('ordencompra', OrdencompraController::class)
     ->names('ordencompra');
 

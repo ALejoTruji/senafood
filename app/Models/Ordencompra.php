@@ -2,38 +2,36 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrdenCompra extends Model
+class Ordencompra extends Model
 {
-    use HasFactory;
-
-    protected $table = 'ordencompra'; // Nombre de la tabla
-    protected $primaryKey = 'id';     // 👈 Indicar que la PK es "id"
+    protected $table = 'ordencompra';
+    protected $primaryKey = 'idOrden';
+    public $timestamps = false;
 
     protected $fillable = [
-        'idProveedor',
-        'idProducto',
-        'fecha',
-        'estado',
-        'cantidad',
-        'precioUnitario',
-        'total'
+        'fecha', 'estado', 'idProveedor', 'idUsuario', 'producto',
+        'cantidad', 'precioUnitario', 'total'
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'idOrden';
+    }
 
     public function proveedor()
     {
         return $this->belongsTo(Proveedor::class, 'idProveedor');
     }
 
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'idUsuario');
+    }
+
     public function producto()
     {
-        return $this->belongsTo(Producto::class, 'idProducto');
-    }
-    
-    public function getRouteKeyName()
-    {
-        return 'id';
+        return $this->belongsTo(Producto::class, 'producto');
     }
 }

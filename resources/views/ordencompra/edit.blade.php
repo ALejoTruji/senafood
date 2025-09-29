@@ -1,15 +1,22 @@
-<form action="{{ route('ordencompra.update', $ordencompra) }}" method="POST" class="space-y-6">
-    @csrf
-    @method('PUT')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="text-2xl font-bold text-green-600 text-center">Editar Orden</h2>
+    </x-slot>
 
-    @include('ordencompra._form', [
-        'ordencompra' => $ordencompra,
-        'proveedores' => $proveedores,
-        'productos' => $productos,
-    ])
-
-    <div class="pt-4 flex gap-3">
-        <button class="px-4 py-2 bg-blue-600 text-white rounded">Actualizar</button>
-        <a href="{{ route('ordencompra.index') }}" class="px-4 py-2 border rounded">Cancelar</a>
+    <div class="max-w-2xl mx-auto p-6 bg-white shadow-md rounded">
+        <form action="{{ route('ordencompra.update', $ordencompra->idOrden) }}" method="POST">
+            @csrf
+            @method('PUT')
+            @include('ordencompra._form', ['ordencompra' => $ordencompra])
+        </form>
+        @if ($errors->any())
+            <div class="bg-red-200 text-red-800 p-3 rounded mb-4 border border-red-400">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     </div>
-</form>
+</x-app-layout>

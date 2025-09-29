@@ -1,21 +1,21 @@
-{{-- resources/views/ordencompra/create.blade.php --}}
 <x-app-layout>
     <x-slot name="header">
-            <h2 class="font-semibold text-xl text-green-500 leading-tight text-center">
-                {{ __('Crear Orden de Compra') }}
-            </h2>
+        <h2 class="text-2xl font-bold text-green-600 text-center">Nueva Orden</h2>
     </x-slot>
 
-    <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
-        <!-- Formulario para crear orden de compra -->
+    <div class="max-w-2xl mx-auto p-6 bg-white shadow-md rounded">
         <form action="{{ route('ordencompra.store') }}" method="POST">
             @csrf
-            <!-- Incluimos todos los campos desde form.blade.php -->
-            @include('ordencompra.partials.form', [
-                'ordencompra' => null,
-                'proveedores' => $proveedores,
-                'productos' => $productos,
-            ])
+            @include('ordencompra._form', ['ordencompra' => null])
         </form>
+        @if ($errors->any())
+            <div class="bg-red-200 text-red-800 p-3 rounded mb-4 border border-red-400">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     </div>
 </x-app-layout>

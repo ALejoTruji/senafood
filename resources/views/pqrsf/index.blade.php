@@ -1,131 +1,170 @@
 <x-app-layout>
     <!-- Encabezado de la página -->
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="text-2xl font-bold text-green-600 leading-tight text-center">
             Lista de PQRSF
         </h2>
     </x-slot>
 
-    <div class="py-6 max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <!-- Botón para crear una nueva PQRSF -->
-        <a href="{{ route('pqrsf.create') }}"
-        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
-        + Nueva PQRSF
-        </a>
+    <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white shadow-xl sm:rounded-lg p-6">
 
-        <div class="mt-6 bg-white shadow rounded p-4">
-            <!-- Mensaje de éxito (se muestra si hay un flash en la sesión) -->
+            <!-- Encabezado con botones -->
+            <div class="flex justify-between items-center mb-6">
+                <!-- Botón de informes con íconos -->
+                <div class="relative">
+                    <button id="informesBtn"
+                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow flex items-center space-x-2">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Informes</span>
+                    </button>
+
+                    <!-- Menú de íconos (horizontal) -->
+                    <div id="informesMenu"
+                        class="hidden absolute mt-2 left-0 bg-white shadow-lg px-4 py-3 rounded-lg border border-gray-200 z-50">
+                        <div class="flex space-x-6">
+                            <button class="export-btn" data-type="copy" title="Copiar">
+                                <i class="fas fa-copy text-green-600 text-2xl"></i>
+                            </button>
+                            <button class="export-btn" data-type="csv" title="CSV">
+                                <i class="fas fa-file-csv text-green-600 text-2xl"></i>
+                            </button>
+                            <button class="export-btn" data-type="excel" title="Excel">
+                                <i class="fas fa-file-excel text-green-600 text-2xl"></i>
+                            </button>
+                            <button class="export-btn" data-type="pdf" title="PDF">
+                                <i class="fas fa-file-pdf text-green-600 text-2xl"></i>
+                            </button>
+                            <button class="export-btn" data-type="print" title="Imprimir">
+                                <i class="fas fa-print text-green-600 text-2xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botón crear PQRSF -->
+                <a href="{{ route('pqrsf.create') }}"
+                    class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-lg shadow">
+                    + Nueva PQRSF
+                </a>
+            </div>
+
+            <!-- Mensaje de éxito -->
             @if(session('success'))
                 <div class="bg-green-100 text-green-700 p-2 mb-4 rounded">
                     {{ session('success') }}
                 </div>
             @endif
 
-            <!-- Tabla con ID para inicializar DataTables -->
-            <table id="pqrsfTable" class="display nowrap stripe hover w-full">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tipo</th>
-                        <th>Descripción</th>
-                        <th>Estado</th>
-                        <th>Usuario</th>
-                        <th>Fecha Creación</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Se recorren las PQRSF enviadas desde el controlador -->
-                    @foreach ($pqrsfs as $pqrsf)
-                        <tr>
-                            <td>{{ $pqrsf->idPQRSF }}</td>
-                            <td>{{ $pqrsf->tipo }}</td>
-                            <td>{{ $pqrsf->descripcion }}</td>
-                            <td>{{ $pqrsf->estado }}</td>
-                            <td>{{ $pqrsf->usuario->name ?? 'N/A' }}</td>
-                            <td>{{ $pqrsf->create_at ? $pqrsf->create_at->format('d/m/Y H:i') : 'N/A' }}</td>
-                            <td>
-                                <!-- Boton ver -->
-                                <a href="{{ route('pqrsf.show', $pqrsf->idPQRSF) }}" 
-                                class="bg-blue-500 hover:bg-blue-700 px-2 py-1 text-white rounded">Ver</a>
-                                <!-- Botón de edición -->
-                                <a href="{{ route('pqrsf.edit', $pqrsf->idPQRSF) }}" 
-                                class="bg-yellow-500 px-2 py-1 text-white rounded">Editar</a>
-                                <!-- Botón de eliminación con confirmación -->
-                                <form action="{{ route('pqrsf.destroy', $pqrsf->idPQRSF) }}" 
-                                    method="POST" class="inline">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" 
-                                            onclick="return confirm('¿Eliminar?')" 
-                                            class="bg-red-500 px-2 py-1 text-white rounded">
-                                        Eliminar
-                                    </button>
-                                </form>
-                            </td>
+            <!-- Tabla fusionada -->
+            @if($pqrsfs->count() > 0)
+                <table id="pqrsf" class="table-auto w-full border border-green-300">
+                    <thead>
+                        <tr class="bg-green-600 text-white">
+                            <th class="px-4 py-2 border">ID</th>
+                            <th class="px-4 py-2 border">Tipo</th>
+                            <th class="px-4 py-2 border">Descripción</th>
+                            <th class="px-4 py-2 border">Estado</th>
+                            <th class="px-4 py-2 border">Usuario</th>
+                            <th class="px-4 py-2 border">Fecha Creación</th>
+                            <th class="px-4 py-2 border">Acciones</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($pqrsfs as $pqrsf)
+                            <tr>
+                                <td class="px-4 py-2 border">{{ $pqrsf->idPQRSF }}</td>
+                                <td class="px-4 py-2 border">{{ $pqrsf->tipo }}</td>
+                                <td class="px-4 py-2 border">{{ $pqrsf->descripcion }}</td>
+                                <td class="px-4 py-2 border">{{ $pqrsf->estado }}</td>
+                                <td class="px-4 py-2 border">{{ $pqrsf->usuario->name ?? 'N/A' }}</td>
+                                <td class="px-4 py-2 border">
+                                    {{ $pqrsf->create_at ? $pqrsf->create_at->format('d/m/Y H:i') : 'N/A' }}
+                                </td>
+                                <td class="px-4 py-2 border space-x-2 text-center">
+                                    <!-- Botón Ver -->
+                                    <a href="{{ route('pqrsf.show', $pqrsf->idPQRSF) }}"
+                                        class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg shadow text-sm">
+                                        Ver
+                                    </a>
+
+                                    <!-- Botón Editar -->
+                                    <a href="{{ route('pqrsf.edit', $pqrsf->idPQRSF) }}"
+                                        class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-lg shadow text-sm">
+                                        Editar
+                                    </a>
+
+                                    <!-- Botón Eliminar -->
+                                    <form action="{{ route('pqrsf.destroy', $pqrsf->idPQRSF) }}" method="POST" class="inline"
+                                        onsubmit="return confirm('¿Eliminar este registro?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit"
+                                            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg shadow text-sm">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <p class="text-gray-600">No hay PQRSF registradas</p>
+            @endif
         </div>
     </div>
 
-    <!-- Estilos de DataTables y botones -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
-
-    <!-- Librerías necesarias: jQuery + DataTables + extensiones de exportación -->
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    <!-- DataTables + Botones -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
-    <!-- Inicialización de DataTables -->
+    <!-- Configuración de DataTables + Menú personalizado -->
     <script>
-        $(document).ready(function() {
-            $('#pqrsfTable').DataTable({
-                responsive: true,       // hace la tabla adaptable
-                dom: 'Bfrtip',          // coloca los botones arriba y buscador a la derecha
-                buttons: ['copy', 'csv', 'excel', 'pdf', 'print'], // botones de exportación
+        $(function() {
+            var table = $('#pqrsf').DataTable({
+                pageLength: 20,
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
                 language: {
-                    // Traducción al español
-                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.8/i18n/es-ES.json'
                 }
+            });
+
+            // Mostrar/ocultar menú de informes
+            $('#informesBtn').on('click', function() {
+                $('#informesMenu').toggleClass('hidden');
+            });
+
+            // Exportar según ícono
+            $('.export-btn').on('click', function() {
+                var type = $(this).data('type');
+                table.button('.buttons-' + type).trigger();
             });
         });
     </script>
 
     <style>
-        /* Estilo para el encabezado de la tabla */
-        #pqrsfTable thead th {
-            background-color: #16a34a; /* Verde */
-            color: white;              /* Texto blanco */
-            text-align: center;        /* Centrado */
+        /* Hover sobre íconos */
+        #informesMenu button i {
+            transition: transform 0.2s;
         }
-
-        /* Estilo para la columna Descripción (3ª columna) */
-        #pqrsfTable td:nth-child(3),
-        #pqrsfTable th:nth-child(3) {
-            max-width: 300px;        /* Ancho máximo */
-            white-space: normal;     /* Permite saltos de línea */
-            word-wrap: break-word;   /* Rompe palabras largas */
-            text-align: left;        /* Alinea el texto */
+        #informesMenu button i:hover {
+            transform: scale(1.2);
         }
-
-        /* Ajuste general de celdas */
-        #pqrsfTable td {
-            vertical-align: top;     /* Alinea arriba el contenido */
-            padding: 8px;            /* Espaciado interno */
-        }
-
-        /* Para tablas responsivas en pantallas pequeñas */
-        div.dataTables_wrapper {
-            width: 100%;
-            overflow-x: auto;        /* Scroll horizontal si es necesario */
+        /* Ocultar botones originales de DataTables */
+        .dt-buttons {
+            display: none !important;
         }
     </style>
 
+    <!-- Font Awesome para íconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </x-app-layout>

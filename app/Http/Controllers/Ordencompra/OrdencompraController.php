@@ -3,87 +3,85 @@
 namespace App\Http\Controllers\Ordencompra;
 
 use App\Http\Controllers\Controller;
-use App\Models\OrdenCompra;
+use App\Models\Ordencompra;
 use App\Models\Proveedor;
 use App\Models\Producto;
-use App\Http\Requests\StoreOrdencompraRequest;
-use App\Http\Requests\UpdateOrdencompraRequest;
+use Illuminate\Http\Request;
 
 class OrdencompraController extends Controller
 {
-    /**
-     * Muestra un listado de órdenes de compra.
-     */
     public function index()
     {
-        $ordencompra = OrdenCompra::with(['proveedor', 'producto'])->get();
-
-        return view('ordencompra.index', compact('ordencompra'));
+        $ordenes = Ordencompra::with(['proveedor', 'producto', 'usuario'])->get();
+        return view('ordencompra.index', compact('ordenes'));
     }
 
-    /**
-     * Muestra el formulario para crear una nueva orden de compra.
-     */
     public function create()
     {
         $proveedores = Proveedor::all();
         $productos = Producto::all();
-
         return view('ordencompra.create', compact('proveedores', 'productos'));
     }
 
-    /**
-     * Guarda una nueva orden de compra en la base de datos.
-     */
-    public function store(StoreOrdencompraRequest $request)
+    public function store(Request $request)
     {
-        OrdenCompra::create($request->validated());
+        $request->validate([
+            'fecha' => 'required|date',
+            'estado' => 'required',
+            'idProveedor' => 'required|exists:proveedores,id',
+            'producto' => 'required|exists:productos,id',
+            'cantidad' => 'required|integer|min:1',
+            'precioUnitario' => 'required|numeric|min:0',
+        ]);
 
-        return redirect()
-            ->route('ordencompra.index')
-            ->with('success', 'Orden de compra creada correctamente.');
+        $orden = new Ordencompra();
+        $orden->fecha = $request->fecha;
+        $orden->estado = $request->estado;
+        $orden->idProveedor = $request->idProveedor;
+        $orden->idUsuario = auth()->id();
+        $orden->producto = $request->producto;
+        $orden->cantidad = $request->cantidad;
+        $orden->precioUnitario = $request->precioUnitario;
+        $orden->total = $request->cantidad * $request->precioUnitario;
+        $orden->save();
+
+        return redirect()->route('ordencompra.index')->with('success', 'Orden creada correctamente.');
     }
 
-    /**
-     * Muestra una orden de compra específica.
-     */
-    public function show(OrdenCompra $ordencompra)
-    {
-        return view('ordencompra.show', compact('ordencompra'));
-    }
-
-    /**
-     * Muestra el formulario para editar una orden de compra.
-     */
-    public function edit(OrdenCompra $ordencompra)
+    public function edit(Ordencompra $ordencompra)
     {
         $proveedores = Proveedor::all();
         $productos = Producto::all();
-
         return view('ordencompra.edit', compact('ordencompra', 'proveedores', 'productos'));
     }
 
-    /**
-     * Actualiza una orden de compra existente en la base de datos.
-     */
-    public function update(UpdateOrdencompraRequest $request, OrdenCompra $ordencompra)
+    public function update(Request $request, Ordencompra $ordencompra)
     {
-        $ordencompra->update($request->validated());
+        $request->validate([
+            'fecha' => 'required|date',
+            'estado' => 'required',
+            'idProveedor' => 'required|exists:proveedores,id',
+            'producto' => 'required|exists:productos,id',
+            'cantidad' => 'required|integer|min:1',
+            'precioUnitario' => 'required|numeric|min:0',
+        ]);
 
-        return redirect()
-            ->route('ordencompra.index')
-            ->with('success', 'Orden de compra actualizada correctamente.');
+        $ordencompra->update([
+            'fecha' => $request->fecha,
+            'estado' => $request->estado,
+            'idProveedor' => $request->idProveedor,
+            'producto' => $request->producto,
+            'cantidad' => $request->cantidad,
+            'precioUnitario' => $request->precioUnitario,
+            'total' => $request->cantidad * $request->precioUnitario,
+        ]);
+
+        return redirect()->route('ordencompra.index')->with('success', 'Orden actualizada correctamente.');
     }
 
-    /**
-     * Elimina una orden de compra de la base de datos.
-     */
-    public function destroy(OrdenCompra $ordencompra)
+    public function destroy(Ordencompra $ordencompra)
     {
         $ordencompra->delete();
-
-        return redirect()
-            ->route('ordencompra.index')
-            ->with('success', 'Orden de compra eliminada correctamente.');
+        return redirect()->route('ordencompra.index')->with('success', 'Orden eliminada correctamente.');
     }
 }

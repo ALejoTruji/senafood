@@ -1,14 +1,18 @@
-<div class="p-6 lg:p-8 bg-white border-b border-gray-200">
-    <img src="{{ asset('images/senafood_logo.jpeg') }}" alt="Sena Food Logo" class="block h-12 w-auto" />
+<div class="p-6 lg:p-8 bg-white border-b border-gray-200 text-center">
+    <!-- Logo centrado y más grande -->
+    <img src="{{ asset('images/senafood_logo.png') }}" alt="Sena Food Logo" class="mx-auto h-20 w-auto" />
 
-    <h1 class="mt-8 text-2xl font-medium text-gray-900">
-        ¡Bienvenido a Sena Food!
+    <!-- Título en verde y centrado -->
+    <h1 class="mt-8 text-xl font-bold text-green-600">
+        ¡Bienvenido a SenaFOOD!
     </h1>
-        <!--Aqui puede ir algo adicional debajo del bienvenido-->
-    <p class="mt-6 text-gray-500 leading-relaxed">
-        
+
+    <!-- Texto adicional opcional -->
+    <p class="mt-4 text-gray-600 leading-relaxed text-m max-w-xl mx-auto">
+        Explora la variedad y el sabor optimizando tu tiempo. Estamos aquí para ofrecerte una experiencia gastronómica eficiente y deliciosa.
     </p>
 </div>
+
 
 <div class="bg-gray-200 bg-opacity-25 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 p-6 lg:p-8">
     <div>
@@ -65,12 +69,10 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
             </svg>
             <h2 class="ms-3 text-xl font-semibold text-gray-900">
-                <a href="https://tailwindcss.com/">Gestion de pedidos y novedades</a>
+                <a href="{{ route('notificacion.index') }}">Gestion de pedidos y novedades</a>
             </h2>
         </div>
-
-        <p class="mt-4 text-gray-500 text-sm leading-relaxed">
-        </p>
+        <p class="mt-4 text-gray-500 text-sm leading-relaxed"> </p>
     </div>
 
     <div>
