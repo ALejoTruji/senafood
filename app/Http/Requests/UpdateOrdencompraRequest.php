@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreOrdencompraRequest extends FormRequest
+class UpdateOrdencompraRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,7 +14,7 @@ class StoreOrdencompraRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'idProveedor'    => 'required|exists:proveedores,id', 
+            'idProveedor'    => 'required|exists:proveedores,id',
             'producto'       => 'required|exists:productos,id', // ← corregido
             'fecha'          => 'required|date|after_or_equal:today',
             'estado'         => 'required|string|max:50',

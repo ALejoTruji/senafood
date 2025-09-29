@@ -38,7 +38,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     ->names('notificacion');
 
 //Ruta Orden de compra
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])
     ->resource('ordencompra', OrdencompraController::class)
     ->names('ordencompra');
 

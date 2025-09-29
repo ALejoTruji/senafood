@@ -1,5 +1,4 @@
 <x-app-layout>
-    {{-- Encabezado --}}
     <x-slot name="header">
         <h2 class="text-2xl font-bold mb-4 text-green-600 leading-tight text-center">
             {{ __('Orden de Compra') }}
@@ -10,9 +9,19 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
 
-                <!-- 🔹 Botón Nueva Orden a la derecha -->
+                @if(session('success'))
+                    <div class="bg-green-200 text-green-800 p-3 rounded mb-4 border border-green-400">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="bg-red-200 text-red-800 p-3 rounded mb-4 border border-red-400">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
                 <div class="flex justify-between items-center mb-6">
-                    <!-- Menú de informes con íconos -->
                     <div class="relative">
                         <button id="informesBtn" 
                             class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow flex items-center space-x-2">
@@ -48,8 +57,7 @@
                     </a>
                 </div>
 
-                {{-- Validación si existen órdenes --}}
-                @if($ordencompra->count() > 0)
+                @if($ordenes->count() > 0)
                     <table id="ordencompra" class="table-auto w-full border border-green-500">
                         <thead>
                             <tr class="bg-green-600 text-white">
@@ -64,25 +72,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($ordencompra as $item)
+                            @foreach ($ordenes as $item)
                                 <tr>
                                     <td class="px-4 py-2 border">{{ $item->proveedor->nombre ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->fecha }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->estado }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->producto->nombre ?? 'N/A' }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->cantidad }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->precioUnitario }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->total }}</td>
+                                    <td class="px-4 py-2 border">
+                                        {{ $item->fecha ? \Carbon\Carbon::parse($item->fecha)->format('d/m/Y') : 'N/A' }}
+                                    </td>
+                                    <td class="px-4 py-2 border">{{ ucfirst($item->estado ?? 'N/A') }}</td>
+                                    <td class="px-4 py-2 border">{{ $item->producto->nombre ?? $item->producto ?? 'N/A' }}</td>
+                                    <td class="px-4 py-2 border">{{ $item->cantidad ?? '0' }}</td>
+                                    <td class="px-4 py-2 border">${{ number_format($item->precioUnitario ?? 0, 2) }}</td>
+                                    <td class="px-4 py-2 border">${{ number_format($item->total ?? 0, 2) }}</td>
                                     <td class="px-4 py-2 border text-center">
-                                        <a href="{{ url('ordencompra/'.$item->id.'/edit') }}"
+                                        <a href="{{ route('ordencompra.edit', $item->idOrden) }}"
                                            class="bg-green-400 hover:bg-green-500 text-white font-semibold px-3 py-1 rounded-lg shadow">
                                            Editar
                                         </a>
-                                        <form action="{{ url('ordencompra/'.$item->id) }}" method="POST" style="display:inline;">
+                                        <form action="{{ route('ordencompra.destroy', $item->idOrden) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                    class="bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1 rounded-lg shadow">
+                                                    class="bg-red-500 hover:bg-red-600 text-white font-semibold px-3 py-1 rounded-lg shadow"
+                                                    onclick="return confirm('¿Seguro que deseas eliminar esta orden?');">
                                                 Eliminar
                                             </button>
                                         </form>
@@ -98,7 +109,6 @@
         </div>
     </div>
 
-    {{-- jQuery + DataTables (CDN) --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -121,12 +131,10 @@
                 }
             });
 
-            // Mostrar/ocultar menú de informes
             $('#informesBtn').on('click', function() {
                 $('#informesMenu').toggleClass('hidden');
             });
 
-            // Exportar según ícono clickeado
             $('.export-btn').on('click', function() {
                 var type = $(this).data('type');
                 table.button('.buttons-' + type).trigger();
@@ -135,22 +143,16 @@
     </script>
 
     <style>
-        /* Hover sobre íconos */
         #informesMenu button i {
             transition: transform 0.2s;
         }
-
         #informesMenu button i:hover {
             transform: scale(1.2);
         }
-
-        /* Ocultar botones por defecto de DataTables */
         .dt-buttons {
             display: none !important;
         }
     </style>
 
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-
 </x-app-layout>
