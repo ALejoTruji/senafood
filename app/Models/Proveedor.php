@@ -19,8 +19,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $telefono
  * @property string|null $direccion
  * @property string|null $NIT
- * @property Carbon|null $update_at
  * @property Carbon|null $create_at
+ * @property Carbon|null $update_at
  * 
  * @property Collection|Ordencompra[] $ordencompras
  *
@@ -30,11 +30,11 @@ class Proveedor extends Model
 {
 	protected $table = 'proveedor';
 	protected $primaryKey = 'idProveedor';
-	public $timestamps = false;
+	public $timestamps = false; // porque ya usas create_at y update_at personalizados
 
 	protected $casts = [
 		'update_at' => 'datetime',
-		'create_at' => 'datetime'
+		'create_at' => 'datetime',
 	];
 
 	protected $fillable = [
@@ -44,7 +44,7 @@ class Proveedor extends Model
 		'direccion',
 		'NIT',
 		'update_at',
-		'create_at'
+		'create_at',
 	];
 
 	public function ordencompras()
