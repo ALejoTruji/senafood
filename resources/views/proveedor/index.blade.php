@@ -9,8 +9,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
 
-                <!-- 🔹 Botón Informes -->
+                <!-- 🔹 Barra superior: Informes + Crear -->
                 <div class="flex justify-between items-center mb-6">
+                    <!-- Botón Informes -->
                     <div class="relative">
                         <button id="informesBtn" 
                             class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow flex items-center space-x-2">
@@ -18,6 +19,7 @@
                             <span>Informes</span>
                         </button>
 
+                        <!-- Menú de informes -->
                         <div id="informesMenu" 
                             class="hidden absolute mt-2 left-0 bg-white shadow-lg px-4 py-3 rounded-lg border border-gray-200 z-50">
                             <div class="flex space-x-6">
@@ -39,15 +41,27 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Botón Crear Proveedor -->
+                    <a href="{{ route('proveedor.create') }}" 
+                        class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg shadow">
+                        + Añadir Proveedor
+                    </a>
                 </div>
 
-            <p>
-                <a href="{{ route('proveedor.create') }}" 
-                class="bg-green-500 hover:bg-green-500 text-white font-semibold px-2 py-2 rounded-lg shadow">
-                Añadir Proveedor
-                </a>
-            </p>
+                <!-- 🔹 Notificaciones -->
+                @if(session('success'))
+                    <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
+                        {{ session('success') }}
+                    </div>
+                @endif
+                @if(session('error'))
+                    <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+                        {{ session('error') }}
+                    </div>
+                @endif
 
+                <!-- 🔹 Tabla Proveedores -->
                 @if($proveedor->count() > 0)
                     <table id="proveedor" class="table-auto w-full border border-green-300">
                         <thead>
@@ -70,7 +84,7 @@
                                     <td class="px-4 py-2 border">{{ $item->NIT }}</td>
                                     <td class="px-4 py-2 border text-center">
                                         <a href="{{ route('proveedor.edit', $item->idProveedor) }}"
-                                        class="bg-green-400 hover:bg-green-500 text-white font-semibold px-3 py-1 rounded-lg shadow">
+                                        class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-3 py-1 rounded-lg shadow">
                                         Modificar
                                         </a>
 
