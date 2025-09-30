@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Notificacion extends Model
 {
     protected $table = 'notificacion'; // 👈 nombre real de la tabla
     protected $primaryKey = 'idNotificacion';
-    public $timestamps = false;
+    public $timestamps = true; // 👈 ahora Laravel manejará created_at y updated_at
 
     protected $casts = [
         'fecha_envio' => 'datetime',
@@ -24,6 +23,7 @@ class Notificacion extends Model
         'fecha_envio',
         'idUsuario',
         'idCarrito',
+        'idPQRSF',
         'leida',
         'fechaLeida',
     ];
@@ -48,4 +48,10 @@ class Notificacion extends Model
     {
         return $this->belongsTo(User::class, 'idUsuario', 'id');
     }
-}
+
+    //Metodopara ver pqrsf desde notificacion
+    public function pqrsf()
+    {
+        return $this->belongsTo(\App\Models\Pqrsf::class, 'idPQRSF', 'idPQRSF');
+    }
+    }

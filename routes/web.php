@@ -33,9 +33,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     ->names('inventario');
 
 //Ruta Notificacion
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
-    ->resource('notificacion', NotificacionController::class)
-    ->names('notificacion');
+Route::resource('notificacion', NotificacionController::class);
+Route::get('/notificaciones', [NotificacionController::class, 'index'])->name('notificaciones.index');
+Route::post('/notificaciones/{id}/leida', [NotificacionController::class, 'marcarLeida'])->name('notificaciones.leida');
+
 
 //Ruta Orden de compra
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])
