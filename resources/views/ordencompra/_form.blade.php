@@ -34,18 +34,18 @@
 
 <!-- Campo: Producto -->
 <div class="mb-4">
-    <label for="producto" class="block text-gray-700">Producto</label>
-    <select name="producto" id="producto"
+    <label for="idProducto" class="block text-gray-700">Producto</label> <!-- ✅ CORREGIDO -->
+    <select name="idProducto" id="idProducto" <!-- ✅ CORREGIDO -->
             class="mt-1 block w-full border-green-500 rounded-md shadow-sm">
         <option value="">Seleccione un producto</option>
         @foreach($productos as $producto)
             <option value="{{ $producto->idProducto }}"
-                {{ old('producto', $ordencompra?->producto) == $producto->idProducto ? 'selected' : '' }}>
+                {{ old('idProducto', $ordencompra?->idProducto) == $producto->idProducto ? 'selected' : '' }}> <!-- ✅ CORREGIDO -->
                 {{ $producto->nombre }}
             </option>
         @endforeach
     </select>
-    @error('producto')
+    @error('idProducto') <!-- ✅ CORREGIDO -->
         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
     @enderror
 </div>

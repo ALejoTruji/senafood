@@ -2,34 +2,42 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 
 class Ordencompra extends Model
 {
-    protected $table = 'ordencompra';
-    protected $primaryKey = 'idOrden';
-    public $timestamps = true; // Esto espera created_at y updated_at
+    use HasFactory;
 
-    // Si usas create_at y update_at personalizados, cambia a:
-    // public $timestamps = false;
+    // ✅ CORREGIDO: La tabla se llama 'ordencompra' en singular
+    protected $table = 'ordencompra';
     
-    const CREATED_AT = 'create_at';
-    const UPDATED_AT = 'update_at';
+    protected $primaryKey = 'idOrden';
 
     protected $fillable = [
-        'fecha', 'estado', 'idProveedor', 'idUsuario', 'producto',
-        'cantidad', 'precioUnitario', 'total', 'create_at', 'update_at'
+        'fecha',
+        'estado', 
+        'idProveedor',
+        'idUsuario',
+        'idProducto',
+        'cantidad',
+        'precioUnitario',
+        'total'
     ];
 
     protected $casts = [
         'fecha' => 'datetime',
-        'create_at' => 'datetime',
-        'update_at' => 'datetime',
         'cantidad' => 'integer',
         'precioUnitario' => 'decimal:2',
         'total' => 'decimal:2'
     ];
+
+    // ✅ CORREGIDO: Timestamps personalizados
+    public $timestamps = false; // Desactivar timestamps automáticos
+    
+    // O si quieres usar los timestamps personalizados:
+    // const CREATED_AT = 'create_at';
+    // const UPDATED_AT = 'update_at';
 
     public function getRouteKeyName()
     {
@@ -46,9 +54,8 @@ class Ordencompra extends Model
         return $this->belongsTo(User::class, 'idUsuario', 'id');
     }
 
-
     public function producto()
     {
-        return $this->belongsTo(Producto::class, 'producto', 'idProducto');
+        return $this->belongsTo(Producto::class, 'idProducto', 'idProducto');
     }
 }

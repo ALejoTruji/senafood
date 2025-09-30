@@ -26,10 +26,10 @@ class OrdencompraController extends Controller
     public function store(Request $request)
     {
         try {
-            // Validación manual corregida
+            // ✅ CORREGIDO: Cambiar 'producto' por 'idProducto'
             $request->validate([
                 'idProveedor' => 'required|exists:proveedor,idProveedor',
-                'producto' => 'required|exists:producto,idProducto',
+                'idProducto' => 'required|exists:producto,idProducto', // ✅ CORREGIDO
                 'fecha' => 'required|date',
                 'estado' => 'required',
                 'cantidad' => 'required|integer|min:1',
@@ -37,8 +37,8 @@ class OrdencompraController extends Controller
             ], [
                 'idProveedor.required' => 'Debe seleccionar un proveedor.',
                 'idProveedor.exists' => 'El proveedor seleccionado no es válido.',
-                'producto.required' => 'Debe seleccionar un producto.',
-                'producto.exists' => 'El producto seleccionado no es válido.',
+                'idProducto.required' => 'Debe seleccionar un producto.', // ✅ CORREGIDO
+                'idProducto.exists' => 'El producto seleccionado no es válido.', // ✅ CORREGIDO
                 'fecha.required' => 'La fecha es obligatoria.',
                 'cantidad.required' => 'Debe ingresar la cantidad.',
                 'precioUnitario.required' => 'Debe ingresar el precio unitario.',
@@ -51,7 +51,7 @@ class OrdencompraController extends Controller
             $orden->estado = $request->estado;
             $orden->idProveedor = $request->idProveedor;
             $orden->idUsuario = auth()->id();
-            $orden->producto = $request->producto;
+            $orden->idProducto = $request->idProducto; // ✅ CORREGIDO
             $orden->cantidad = $request->cantidad;
             $orden->precioUnitario = $request->precioUnitario;
             $orden->total = $request->cantidad * $request->precioUnitario;
@@ -81,10 +81,10 @@ class OrdencompraController extends Controller
     public function update(Request $request, Ordencompra $ordencompra)
     {
         try {
-            // Validación manual corregida
+            // ✅ CORREGIDO: Cambiar 'producto' por 'idProducto'
             $request->validate([
                 'idProveedor' => 'required|exists:proveedor,idProveedor',
-                'producto' => 'required|exists:producto,idProducto',
+                'idProducto' => 'required|exists:producto,idProducto', // ✅ CORREGIDO
                 'fecha' => 'required|date',
                 'estado' => 'required',
                 'cantidad' => 'required|integer|min:1',
@@ -92,8 +92,8 @@ class OrdencompraController extends Controller
             ], [
                 'idProveedor.required' => 'Debe seleccionar un proveedor.',
                 'idProveedor.exists' => 'El proveedor seleccionado no es válido.',
-                'producto.required' => 'Debe seleccionar un producto.',
-                'producto.exists' => 'El producto seleccionado no es válido.',
+                'idProducto.required' => 'Debe seleccionar un producto.', // ✅ CORREGIDO
+                'idProducto.exists' => 'El producto seleccionado no es válido.', // ✅ CORREGIDO
                 'fecha.required' => 'La fecha es obligatoria.',
                 'cantidad.required' => 'Debe ingresar la cantidad.',
                 'precioUnitario.required' => 'Debe ingresar el precio unitario.',
@@ -102,7 +102,7 @@ class OrdencompraController extends Controller
             $ordencompra->fecha = $request->fecha;
             $ordencompra->estado = $request->estado;
             $ordencompra->idProveedor = $request->idProveedor;
-            $ordencompra->producto = $request->producto;
+            $ordencompra->idProducto = $request->idProducto; // ✅ CORREGIDO
             $ordencompra->cantidad = $request->cantidad;
             $ordencompra->precioUnitario = $request->precioUnitario;
             $ordencompra->total = $request->cantidad * $request->precioUnitario;

@@ -56,11 +56,7 @@
                 </div>
             @endif
 
-<<<<<<< HEAD
-            <!-- Tabla con la lista de PQRSF -->
-=======
             <!-- Tabla fusionada -->
->>>>>>> sebasnoti
             @if($pqrsfs->count() > 0)
                 <table id="pqrsf" class="table-auto w-full border border-green-300">
                     <thead>
@@ -70,10 +66,6 @@
                             <th class="px-4 py-2 border">Descripción</th>
                             <th class="px-4 py-2 border">Estado</th>
                             <th class="px-4 py-2 border">Usuario</th>
-<<<<<<< HEAD
-=======
-                            <th class="px-4 py-2 border">Fecha Creación</th>
->>>>>>> sebasnoti
                             <th class="px-4 py-2 border">Acciones</th>
                         </tr>
                     </thead>
@@ -85,12 +77,6 @@
                                 <td class="px-4 py-2 border">{{ $pqrsf->descripcion }}</td>
                                 <td class="px-4 py-2 border">{{ $pqrsf->estado }}</td>
                                 <td class="px-4 py-2 border">{{ $pqrsf->usuario->name ?? 'N/A' }}</td>
-<<<<<<< HEAD
-=======
-                                <td class="px-4 py-2 border">
-                                    {{ $pqrsf->create_at ? $pqrsf->create_at->format('d/m/Y H:i') : 'N/A' }}
-                                </td>
->>>>>>> sebasnoti
                                 <td class="px-4 py-2 border space-x-2 text-center">
                                     <!-- Botón Ver -->
                                     <a href="{{ route('pqrsf.show', $pqrsf->idPQRSF) }}"
@@ -119,20 +105,13 @@
                     </tbody>
                 </table>
             @else
-<<<<<<< HEAD
                 <!-- Si no hay registros -->
-=======
->>>>>>> sebasnoti
                 <p class="text-gray-600">No hay PQRSF registradas</p>
             @endif
         </div>
     </div>
 
-<<<<<<< HEAD
     <!-- jQuery + DataTables -->
-=======
-    <!-- DataTables + Botones -->
->>>>>>> sebasnoti
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -144,11 +123,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
-<<<<<<< HEAD
     <!-- Configuración de DataTables -->
-=======
-    <!-- Configuración de DataTables + Menú personalizado -->
->>>>>>> sebasnoti
     <script>
         $(function() {
             var table = $('#pqrsf').DataTable({
@@ -178,17 +153,11 @@
         #informesMenu button i {
             transition: transform 0.2s;
         }
-<<<<<<< HEAD
 
         #informesMenu button i:hover {
             transform: scale(1.2);
         }
 
-=======
-        #informesMenu button i:hover {
-            transform: scale(1.2);
-        }
->>>>>>> sebasnoti
         /* Ocultar botones originales de DataTables */
         .dt-buttons {
             display: none !important;
