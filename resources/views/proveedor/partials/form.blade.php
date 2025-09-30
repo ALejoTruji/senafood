@@ -13,7 +13,10 @@
     <label for="contacto" class="block text-gray-700">Contacto</label>
     <input type="text" name="contacto" id="contacto"
         value="{{ old('contacto', $proveedor->contacto ?? '') }}"
-        class="mt-1 block w-full border-green-500 rounded-md shadow-sm">
+        class="mt-1 block w-full border-green-500 rounded-md shadow-sm @error('contacto') border-red-500 @enderror">
+    @error('contacto')
+        <div class="text-red-500 mt-1">{{ $message }}</div>
+    @enderror
 </div>
 
 <!-- Campo: Teléfono -->

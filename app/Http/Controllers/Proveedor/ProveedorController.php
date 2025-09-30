@@ -38,10 +38,12 @@ class ProveedorController extends Controller
     {
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
-            'contacto' => 'nullable|string|max:255',
+            'contacto' => 'nullable|string|email|max:255',
             'telefono' => 'nullable|string|max:15',
             'direccion' => 'nullable|string|max:255',
             'nit' => 'nullable|string|max:20',
+        ], [
+    'contacto.email' => 'El campo Contacto debe ser un correo electrónico válido.',
         ]);
 
         Proveedor::create($request->all()); // Esto guardará created_at y updated_at automáticamente
@@ -70,16 +72,18 @@ class ProveedorController extends Controller
      */
     public function update(Request $request, Proveedor $proveedor)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nombre' => 'required|string|max:255',
-            'contacto' => 'nullable|string|max:255',
+            'contacto' => 'nullable|string|email|max:255',
             'telefono' => 'nullable|string|max:15',
             'direccion' => 'nullable|string|max:255',
             'NIT' => 'nullable|string|max:20',
+        ], [
+        'contacto.email' => 'El campo Contacto debe ser un correo electrónico válido.',
         ]);
 
-        $proveedor->update($request->all()); // Esto actualizará updated_at automáticamente
-        return redirect()->route('proveedor.index')->with('success', 'Proveedor actualizado exitosamente.');
+        $proveedor->update($validated); // Esto actualizará updated_at automáticamente
+        return redirect()->route('proveedor.index')->with('success', 'Proveedor actualizado exitosamente.');;
     }
 
     /**
