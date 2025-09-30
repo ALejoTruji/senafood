@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProductoController extends Controller
 {
@@ -82,19 +83,33 @@ class ProductoController extends Controller
             $producto->codigo_barras = '77' . now()->timestamp . rand(10, 99);
             $producto->estado = $validated['estado'];
 
-            // ✅ Manejo de imagen
+            // ✅ MANEJO CORREGIDO DE IMAGEN
             if ($request->hasFile('imagen')) {
                 $file = $request->file('imagen');
+                
+                \Log::info('Archivo de imagen recibido:', [
+                    'nombre_original' => $file->getClientOriginalName(),
+                    'tamaño' => $file->getSize(),
+                    'extension' => $file->getClientOriginalExtension()
+                ]);
 
-                // Nombre único pero legible (sin caracteres raros)
+                // Nombre único pero legible
                 $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) 
                     . '.' . $file->getClientOriginalExtension();
 
-                // Se guarda en storage/app/public/productos
-                $file->storeAs('productos', $filename, 'public');
+                \Log::info('Intentando guardar imagen como: ' . $filename);
 
-                // Guardamos SOLO el nombre del archivo en DB
+                // Guardar usando Storage
+                $path = $file->storeAs('public/productos', $filename);
+                
+                \Log::info('Imagen guardada en: ' . $path);
+
+                // Guardar SOLO el nombre del archivo en DB
                 $producto->imagen = $filename;
+
+                \Log::info('Nombre guardado en BD: ' . $filename);
+            } else {
+                \Log::info('No se recibió archivo de imagen en la request');
             }
 
             // Asociar inventario
@@ -103,11 +118,14 @@ class ProductoController extends Controller
 
             DB::commit();
 
+            \Log::info('Producto creado exitosamente. ID: ' . $producto->idProducto);
+
             return redirect()->route('producto.index')->with('success', 'Producto creado con éxito y asociado a inventario.');
 
         } catch (\Throwable $e) {
             DB::rollBack();
             \Log::error('Error creando producto con inventario: ' . $e->getMessage());
+            \Log::error('Trace: ' . $e->getTraceAsString());
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['error' => 'Ocurrió un error al crear el producto: ' . $e->getMessage()]);
@@ -151,33 +169,66 @@ class ProductoController extends Controller
             'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
         ]);
 
-        $producto->fill($validated);
+        DB::beginTransaction();
 
-        // Si hay nueva imagen, reemplazar la anterior
-        if ($request->hasFile('imagen')) {
-            $file = $request->file('imagen');
-            $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) 
-                . '.' . $file->getClientOriginalExtension();
+        try {
+            $producto->fill($validated);
 
-            // Se guarda en storage/app/public/productos
-            $file->storeAs('productos', $filename, 'public');
+            // ✅ MANEJO CORREGIDO DE IMAGEN - ACTUALIZACIÓN
+            if ($request->hasFile('imagen')) {
+                $file = $request->file('imagen');
+                
+                \Log::info('Actualizando imagen para producto ID: ' . $producto->idProducto);
 
-            // Guardamos SOLO el nombre del archivo en DB
-            $producto->imagen = $filename;
+                // Eliminar imagen anterior si existe
+                if ($producto->imagen && Storage::exists('public/productos/' . $producto->imagen)) {
+                    Storage::delete('public/productos/' . $producto->imagen);
+                    \Log::info('Imagen anterior eliminada: ' . $producto->imagen);
+                }
+
+                // Nombre único pero legible
+                $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) 
+                    . '.' . $file->getClientOriginalExtension();
+
+                // Guardar usando Storage
+                $path = $file->storeAs('public/productos', $filename);
+                
+                \Log::info('Nueva imagen guardada en: ' . $path);
+
+                // Guardar SOLO el nombre del archivo en DB
+                $producto->imagen = $filename;
+            }
+
+            $producto->save();
+
+            // Actualizar inventario asociado
+            if ($producto->inventario) {
+                $producto->inventario->stockTotal = $producto->stock;
+                $producto->inventario->costouni = $producto->costo_unitario;
+                $producto->inventario->valor_total = $producto->stock * $producto->costo_unitario;
+                $producto->inventario->save();
+            }
+
+            DB::commit();
+
+            //  Notificación si el stock es menor a 10
+            if ($producto->stock < 10) {
+                Notificacion::create([
+                    'mensaje'   => "⚠️ El producto '{$producto->nombre}' tiene stock bajo ({$producto->stock}).",
+                    'idUsuario' => Auth::id(),
+                    'leida'     => false,
+                ]);
+            }
+
+            return redirect()->route('producto.index')->with('success', 'Producto actualizado con éxito');
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::error('Error actualizando producto: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Ocurrió un error al actualizar el producto: ' . $e->getMessage()]);
         }
-
-        $producto->save();
-
-        //  Notificación si el stock es menor a 10
-        if ($producto->stock < 10) {
-            Notificacion::create([
-                'mensaje'   => "⚠️ El producto '{$producto->nombre}' tiene stock bajo ({$producto->stock}).",
-                'idUsuario' => Auth::id(),
-                'leida'     => false,
-            ]);
-        }
-
-        return redirect()->route('producto.index')->with('success', 'Producto actualizado con éxito');
     }
 
 
@@ -186,10 +237,27 @@ class ProductoController extends Controller
      */
     public function destroy(Producto $producto)
     {
+        DB::beginTransaction();
+        
         try {
+            // Eliminar imagen si existe
+            if ($producto->imagen && Storage::exists('public/productos/' . $producto->imagen)) {
+                Storage::delete('public/productos/' . $producto->imagen);
+            }
+
+            // Eliminar inventario asociado
+            if ($producto->inventario) {
+                $producto->inventario->delete();
+            }
+
             $producto->delete();
+            
+            DB::commit();
+            
             return back()->with('ok', 'Producto eliminado');
         } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::error('Error eliminando producto: ' . $e->getMessage());
             return back()->withErrors('No se puede eliminar: tiene registros relacionados.');
         }
     }

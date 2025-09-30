@@ -88,12 +88,17 @@
         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
     @enderror
 
-    <!-- Si ya existe una imagen, mostrarla -->
-    @if(isset($producto) && $producto->imagen)
+    <!-- ✅ CORREGIDO: Mostrar imagen existente -->
+    @if(isset($producto) && $producto->tieneImagen())
         <div class="mt-2">
-            <img src="{{ asset('storage/' . $producto->imagen) }}"
+            <p class="text-sm text-gray-600">Imagen actual:</p>
+            <img src="{{ $producto->imagen_url }}"
                  alt="{{ $producto->nombre }}"
                  class="max-w-[150px] max-h-[150px] object-contain rounded-md border">
+        </div>
+    @elseif(isset($producto) && $producto->imagen)
+        <div class="mt-2">
+            <p class="text-sm text-yellow-600">⚠️ Imagen registrada pero no encontrada en el servidor: {{ $producto->imagen }}</p>
         </div>
     @endif
 </div>
