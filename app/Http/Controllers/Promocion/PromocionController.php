@@ -38,8 +38,8 @@ class PromocionController extends Controller
             'descuento'   => $request->descuento,
             'idProducto'  => $request->idProducto,
             'estado'      => $request->estado,
-            'create_at'   => now(),
-            'update_at'   => now(),
+            'created_at'  => now(), // CORREGIDO: create_at -> created_at
+            'updated_at'  => now(), // CORREGIDO: update_at -> updated_at
         ]);
 
         return redirect()->route('promocion.index')->with('success', 'Promoción creada correctamente.');
@@ -67,7 +67,7 @@ class PromocionController extends Controller
             'descuento'   => $request->descuento,
             'idProducto'  => $request->idProducto,
             'estado'      => $request->estado,
-            'update_at'   => now(),
+            'updated_at'  => now(), // CORREGIDO: update_at -> updated_at
         ]);
 
         return redirect()->route('promocion.index')->with('success', 'Promoción actualizada correctamente.');

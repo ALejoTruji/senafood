@@ -69,7 +69,6 @@
                                 <th class="px-4 py-2 border">Descripción</th>
                                 <th class="px-4 py-2 border">Descuento</th>
                                 <th class="px-4 py-2 border">Producto</th>
-                                <th class="px-4 py-2 border">Estado</th>
                                 <th class="px-4 py-2 border">Modificar</th>
                             </tr>
                         </thead>
@@ -79,7 +78,6 @@
                                     <td class="px-4 py-2 border">{{ $item->descripcion }}</td>
                                     <td class="px-4 py-2 border">{{ $item->descuento }}%</td>
                                     <td class="px-4 py-2 border">{{ $item->producto->nombre ?? 'Sin producto' }}</td>
-                                    <td class="px-4 py-2 border">{{ $item->estado ? 'Activo' : 'Inactivo' }}</td>
                                     <td class="px-4 py-2 border text-center">
                                         <a href="{{ route('promocion.edit', $item->idPromocion) }}"
                                             class="bg-green-400 hover:bg-green-500 text-white font-semibold px-3 py-1 rounded-lg shadow">

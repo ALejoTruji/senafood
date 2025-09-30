@@ -3,108 +3,101 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Flex organiza los elementos de la navbar -->
         <div class="flex justify-between h-20 items-center">
-            <div class="flex">
-                <!--LOGO -->
+            <!-- LADO IZQUIERDO: Logo y enlaces principales -->
+            <div class="flex items-center">
+                <!-- LOGO -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
                         <img src="{{ asset('images/senafood_logo.png') }}" alt="Senafood Logo" style="height: 70px; width: auto;" />
                     </a>
                 </div>
 
-                <!--LINKS PRINCIPALES (Dash, Prod, Inve, Cata) -->
-                <x-nav-link
-                    href="{{ route('dashboard') }}"
-                    :active="request()->routeIs('dashboard')"
-                    class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-200"
-                    active-class="bg-green-200 text-green-900 rounded-md px-3 py-2">
-                    {{ __('Dashboard') }}
-                </x-nav-link>
-                
-                <!-- Enlace a Productos -->
-                <x-nav-link
-                    href="{{ route('producto.index') }}"
-                    :active="request()->routeIs('producto.*')"
-                    class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-200"
-                    active-class="bg-green-200 text-green-900 rounded-md px-3 py-2">
-                    {{ __('Productos') }}
-                </x-nav-link>
+                <!-- LINKS PRINCIPALES (Dash, Prod, Inve, Cata) -->
+                <div class="hidden sm:flex sm:items-center sm:ml-6">
+                    <x-nav-link
+                        href="{{ route('dashboard') }}"
+                        :active="request()->routeIs('dashboard')"
+                        class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-105"
+                        active-class="bg-green-200 text-green-900 rounded-md px-3 py-2">
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
+                    
+                    <!-- Enlace a Productos -->
+                    <x-nav-link
+                        href="{{ route('producto.index') }}"
+                        :active="request()->routeIs('producto.*')"
+                        class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-105"
+                        active-class="bg-green-200 text-green-900 rounded-md px-3 py-2">
+                        {{ __('Productos') }}
+                    </x-nav-link>
 
-                <!-- Enlace al Catálogo -->
-                <x-nav-link
-                    href="{{ route('catalogo') }}"
-                    :active="request()->routeIs('catalogo')"
-                    class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-200"
-                    active-class="bg-green-200 text-green-900 rounded-md px-3 py-2"
-                >
-                    {{ __('Catálogo') }}
-                </x-nav-link>
+                    <!-- Enlace al Catálogo -->
+                    <x-nav-link
+                        href="{{ route('catalogo') }}"
+                        :active="request()->routeIs('catalogo')"
+                        class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-105"
+                        active-class="bg-green-200 text-green-900 rounded-md px-3 py-2"
+                    >
+                        {{ __('Catálogo') }}
+                    </x-nav-link>
 
-                <!-- Enlace a Inventario -->
-                <x-nav-link
-                    href="{{ route('inventario.index') }}"
-                    :active="request()->routeIs('inventario.*')"
-                    class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-200"
-                    active-class="bg-green-200 text-green-900 rounded-md px-3 py-2"
-                >
-                    {{ __('Inventario') }}
-                </x-nav-link>
+                    <!-- Enlace a Inventario -->
+                    <x-nav-link
+                        href="{{ route('inventario.index') }}"
+                        :active="request()->routeIs('inventario.*')"
+                        class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-105"
+                        active-class="bg-green-200 text-green-900 rounded-md px-3 py-2"
+                    >
+                        {{ __('Inventario') }}
+                    </x-nav-link>
 
-                
-                <!-- Enlace a promocion  -->
-                <x-nav-link
-                    href="{{ route('promocion.index') }}"
-                    :active="request()->routeIs('promocion.*')"
-                    class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-200"
-                    active-class="bg-green-200 text-green-900 rounded-md px-3 py-2"
-                >
-                    {{ __('Promocion') }}
-                </x-nav-link>
+                    
+                    <!-- Enlace a promocion  -->
+                    <x-nav-link
+                        href="{{ route('promocion.index') }}"
+                        :active="request()->routeIs('promocion.*')"
+                        class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-105"
+                        active-class="bg-green-200 text-green-900 rounded-md px-3 py-2"
+                    >
+                        {{ __('Promocion') }}
+                    </x-nav-link>
 
-                <!-- Enlace al Proveedor -->
-                <x-nav-link
-                    href="{{ route('proveedor.index') }}"
-                    :active="request()->routeIs('proveedor.*')"
-                    class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-200"
-                    active-class="bg-green-200 text-green-900 rounded-md px-3 py-2"
-                >
-                    {{ __('Proveedor') }}
-                </x-nav-link>
+                    <!-- Enlace al Proveedor -->
+                    <x-nav-link
+                        href="{{ route('proveedor.index') }}"
+                        :active="request()->routeIs('proveedor.*')"
+                        class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-105"
+                        active-class="bg-green-200 text-green-900 rounded-md px-3 py-2"
+                    >
+                        {{ __('Proveedor') }}
+                    </x-nav-link>
 
-                <!-- Enlace a Orden de compra -->
-                <x-nav-link
-                    href="{{ route('ordencompra.index') }}"
-                    :active="request()->routeIs('ordencompra.*')"
-                    class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-200"
-                    active-class="bg-green-200 text-green-900 rounded-md px-3 py-2"
-                >
-                    {{ __('O C') }}
-                </x-nav-link>
+                    <!-- Enlace a Orden de compra -->
+                    <x-nav-link
+                        href="{{ route('ordencompra.index') }}"
+                        :active="request()->routeIs('ordencompra.*')"
+                        class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-105"
+                        active-class="bg-green-200 text-green-900 rounded-md px-3 py-2"
+                    >
+                        {{ __('O C') }}
+                    </x-nav-link>
 
-                <!-- Enlace a Notificación -->
-                <x-nav-link
-                    href="{{ route('notificacion.index') }}"
-                    :active="request()->routeIs('notificacion.*')"
-                    class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-200"
-                    active-class="bg-green-200 text-green-900 rounded-md px-3 py-2"
-                >
-                    {{ __('Notificación') }}
-                </x-nav-link>
+                    <!--Enlace PQRSF-->
+                    <x-nav-link
+                        href="{{ route('pqrsf.index') }}"
+                        :active="request()->routeIs('pqrsf.*')"
+                        class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-105"
+                        active-class="bg-green-200 text-green-900 rounded-md px-3 py-2"
+                    >
+                        {{ __('PQRSF') }}
+                    </x-nav-link>
+                </div>
+            </div>
 
-                <!--Enlace PQRSF-->
-                <x-nav-link
-                    href="{{ route('pqrsf.index') }}"
-                    :active="request()->routeIs('pqrsf.*')"
-                    class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-200"
-                    active-class="bg-green-200 text-green-900 rounded-md px-3 py-2"
-                >
-                    {{ __('PQRSF') }}
-                </x-nav-link>
-
-            <!-- 🔹 SECCIÓN DERECHA DE LA NAVBAR (equipos, usuario, etc.) -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-
+            <!-- LADO DERECHO: Usuario y notificaciones -->
+            <div class="flex items-center">
                 <!-- 🔔 Notificaciones -->
-                <div class="ms-3 relative">
+                <div class="relative">
                     <a href="{{ route('notificacion.index') }}" class="relative flex items-center">
                         <!-- Icono campana -->
                         <svg xmlns="http://www.w3.org/2000/svg" 
@@ -116,7 +109,6 @@
                                 1.5h18l-1.5-1.5z" />
                         </svg>
 
-
                         <!-- Contador rojo de notificaciones no leídas -->
                         @php
                             $unread = \App\Models\Notificacion::where('idUsuario', Auth::id())
@@ -124,7 +116,7 @@
                                         ->count();
                         @endphp
                         @if($unread > 0)
-                            <span class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full px-1">
+                            <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                                 {{ $unread }}
                             </span>
                         @endif
@@ -132,13 +124,13 @@
                 </div>
 
                 <!-- Dropdown de Usuario -->
-                <div class="ms-3 relative">
+                <div class="ml-3 relative">
                     <x-dropdown align="right" width="48">
                         <!--Trigger del dropdown (foto o nombre del usuario) -->
                         <x-slot name="trigger">
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
                                 <!-- Si tiene foto de perfil -->
-                                <button class="flex text-sm border-2 ...">
+                                <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
                                     <img class="size-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                                 </button>
                             @else
@@ -197,11 +189,10 @@
 
             <!-- 🔹 Botón "Hamburger" para dispositivos pequeños -->
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center ...">
-                    <!-- Icono del menú -->
-                    <svg class="size-6" ...>
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" ... />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" ... />
+                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                    <svg class="size-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -231,14 +222,14 @@
                 {{ __('Inventario') }}
             </x-responsive-nav-link>
 
-            <!-- Nuevo enlace al Proveedor en responsive -->
-            <x-responsive-nav-link href="{{ route('proveedor.index') }}" :active="request()->routeIs('proveedor.*')">
-                {{ __('Proveedor') }}
+            <!-- Enlace a promoción en responsive -->
+            <x-responsive-nav-link href="{{ route('promocion.index') }}" :active="request()->routeIs('promocion.*')">
+                {{ __('Promocion') }}
             </x-responsive-nav-link>
 
             <!-- Nuevo enlace al Proveedor en responsive -->
-            <x-responsive-nav-link href="{{ route('notificacion.index') }}" :active="request()->routeIs('notificacion.*')">
-                {{ __('Notificacion') }}
+            <x-responsive-nav-link href="{{ route('proveedor.index') }}" :active="request()->routeIs('proveedor.*')">
+                {{ __('Proveedor') }}
             </x-responsive-nav-link>
 
             <!-- Enlace PQRSF en responsive -->
@@ -246,7 +237,7 @@
                 {{ __('PQRSF') }}
             </x-responsive-nav-link>
 
-            <!-- Nuevo enlace al Proveedor en responsive -->
+            <!-- Nuevo enlace al OC en responsive -->
             <x-responsive-nav-link href="{{ route('ordencompra.index') }}" :active="request()->routeIs('ordencompra.*')">
                 {{ __('O C') }}
             </x-responsive-nav-link>
@@ -272,7 +263,7 @@
             <!-- Links de gestión de cuenta en responsive -->
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
-                    {{ __('Profile') }}
+                    {{ __('Perfil') }}
                 </x-responsive-nav-link>
 
                 @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
@@ -285,7 +276,7 @@
                 <form method="POST" action="{{ route('logout') }}" x-data>
                     @csrf
                     <x-responsive-nav-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
-                        {{ __('Log Out') }}
+                        {{ __('Cerrar sesión') }}
                     </x-responsive-nav-link>
                 </form>
 
