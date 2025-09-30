@@ -49,6 +49,17 @@
                     {{ __('Inventario') }}
                 </x-nav-link>
 
+                
+                <!-- Enlace a promocion  -->
+                <x-nav-link
+                    href="{{ route('promocion.index') }}"
+                    :active="request()->routeIs('promocion.*')"
+                    class="text-xl text-green-700 hover:text-orange-700 font-semibold transition-transform duration-200 transform hover:scale-200"
+                    active-class="bg-green-200 text-green-900 rounded-md px-3 py-2"
+                >
+                    {{ __('Promocion') }}
+                </x-nav-link>
+
                 <!-- Enlace al Proveedor -->
                 <x-nav-link
                     href="{{ route('proveedor.index') }}"
