@@ -1,3 +1,15 @@
+@if(session('error'))
+    <div class="bg-red-200 text-red-800 p-3 rounded mb-4 border border-red-400">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if(session('success'))
+    <div class="bg-green-200 text-green-800 p-3 rounded mb-4 border border-green-400">
+        {{ session('success') }}
+    </div>
+@endif
+
 @php
     $hoy = \Carbon\Carbon::today()->format('Y-m-d');
 @endphp
@@ -9,12 +21,15 @@
             class="mt-1 block w-full border-green-500 rounded-md shadow-sm">
         <option value="">Seleccione un proveedor</option>
         @foreach($proveedores as $proveedor)
-            <option value="{{ $proveedor->id }}"
-                {{ old('idProveedor', $ordencompra?->idProveedor) == $proveedor->id ? 'selected' : '' }}>
+            <option value="{{ $proveedor->idProveedor }}"
+                {{ old('idProveedor', $ordencompra?->idProveedor) == $proveedor->idProveedor ? 'selected' : '' }}>
                 {{ $proveedor->nombre }}
             </option>
         @endforeach
     </select>
+    @error('idProveedor')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
 </div>
 
 <!-- Campo: Producto -->
@@ -24,12 +39,15 @@
             class="mt-1 block w-full border-green-500 rounded-md shadow-sm">
         <option value="">Seleccione un producto</option>
         @foreach($productos as $producto)
-            <option value="{{ $producto->id }}"
-                {{ old('producto', $ordencompra?->producto) == $producto->id ? 'selected' : '' }}>
+            <option value="{{ $producto->idProducto }}"
+                {{ old('producto', $ordencompra?->producto) == $producto->idProducto ? 'selected' : '' }}>
                 {{ $producto->nombre }}
             </option>
         @endforeach
     </select>
+    @error('producto')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
 </div>
 
 <!-- Campo: Fecha -->
@@ -39,6 +57,9 @@
            min="{{ $hoy }}"
            value="{{ old('fecha', isset($ordencompra->fecha) ? \Carbon\Carbon::parse($ordencompra->fecha)->format('Y-m-d') : $hoy) }}"
            class="mt-1 block w-full border-green-500 rounded-md shadow-sm">
+    @error('fecha')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
 </div>
 
 <!-- Campo: Estado -->
@@ -50,6 +71,9 @@
         <option value="aprobado"  {{ old('estado', $ordencompra?->estado) == 'aprobado'  ? 'selected' : '' }}>Aprobado</option>
         <option value="cancelado" {{ old('estado', $ordencompra?->estado) == 'cancelado' ? 'selected' : '' }}>Cancelado</option>
     </select>
+    @error('estado')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
 </div>
 
 <!-- Campo: Cantidad -->
@@ -58,6 +82,9 @@
     <input type="number" name="cantidad" id="cantidad" min="1"
            value="{{ old('cantidad', $ordencompra?->cantidad) }}"
            class="mt-1 block w-full border-green-500 rounded-md shadow-sm">
+    @error('cantidad')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
 </div>
 
 <!-- Campo: Precio Unitario -->
@@ -66,6 +93,9 @@
     <input type="number" step="0.01" name="precioUnitario" id="precioUnitario"
            value="{{ old('precioUnitario', $ordencompra?->precioUnitario) }}"
            class="mt-1 block w-full border-green-500 rounded-md shadow-sm">
+    @error('precioUnitario')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
 </div>
 
 <!-- Campo: Total (solo lectura) -->
